@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Persuasion Arena: Mengajak Tanpa Menekan — Materi 4.3</title>
+<style>
+:root{
+  --cream:#FFF8EE;--paper:#FFFFFF;--ink:#1B1F3B;--muted:#5A6088;
+  --indigo:#3347FF;--violet:#7A5CFF;--lilac:#E6DFFF;
+  --mint:#C9F4DD;--sage:#59C08A;--coral:#FF6F5E;--pink:#FFD3E0;
+  --amber:#FFC53D;--sun:#FFF1B8;--sky:#D8ECFF;
+  --r:28px;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;display:flex;flex-direction:column;color:var(--ink);line-height:1.5;
+  font-family:"Nunito","Quicksand","SF Pro Rounded",ui-rounded,"Trebuchet MS","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+  background-color:var(--cream);
+  background-image:radial-gradient(rgba(27,31,59,.13) 1.3px,transparent 1.4px);background-size:24px 24px}
+body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(circle at 8% 10%,rgba(255,197,61,.35),transparent 32%),radial-gradient(circle at 92% 6%,rgba(122,92,255,.28),transparent 34%),radial-gradient(circle at 88% 92%,rgba(89,192,138,.3),transparent 32%),radial-gradient(circle at 6% 88%,rgba(255,111,94,.2),transparent 30%)}
+h1,h2,h3,p{margin:0}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+.hl{background:linear-gradient(transparent 60%,var(--amber) 60%,var(--amber) 92%,transparent 92%);padding:0 3px}
+
+/* top bar */
+.topbar{position:sticky;top:0;z-index:30;background:rgba(255,248,238,.92);backdrop-filter:blur(10px);border-bottom:2.5px solid var(--ink)}
+.tb1,.meters{max-width:1120px;margin:0 auto;padding:8px 16px}
+.tb1{display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.logo{width:52px;height:52px;flex:none;border:2.5px solid var(--ink);border-radius:18px;background:var(--sun);display:grid;place-items:center;box-shadow:3px 3px 0 var(--ink);transform:rotate(-4deg)}
+.logo svg{width:44px;height:44px}
+.brand b{display:block;font-size:16px;line-height:1.1;font-weight:900;letter-spacing:-.01em}.brand small{color:var(--muted);font-size:12px;font-weight:700}
+.chips{display:flex;gap:8px;flex-wrap:wrap;min-width:0;flex:1;justify-content:center}
+.chip{border:2.5px solid var(--ink);border-radius:99px;background:#fff;padding:2px 12px;font-size:12.5px;font-weight:800;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip.alt{background:var(--sun)}
+.snd{display:flex;gap:8px;flex:none}
+.sbtn{width:42px;height:42px;border:2.5px solid var(--ink);border-radius:16px;background:var(--lilac);box-shadow:3px 3px 0 var(--ink);font-size:18px;position:relative;display:grid;place-items:center;padding:0;line-height:1;transition:transform .12s}
+.sbtn:hover{transform:translate(-1px,-1px) rotate(-4deg)}
+.sbtn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.sbtn.off{background:#E8E3D6;opacity:.75}
+.sbtn.off:after{content:"";position:absolute;left:7px;right:7px;top:50%;height:4px;margin-top:-2px;background:var(--coral);border:1.5px solid var(--ink);border-radius:4px;transform:rotate(-35deg)}
+.meters{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding-top:0}
+.meter{position:relative;background:#fff;border:2.5px solid var(--ink);border-radius:18px;padding:6px 12px 8px}
+.ml{display:flex;justify-content:space-between;align-items:baseline;gap:6px;font-size:11.5px;color:var(--muted);font-weight:800;line-height:1.2}
+.mv{font-size:20px;color:var(--ink);white-space:nowrap;font-weight:900}
+.bar{height:10px;border-radius:99px;background:#EDE8DA;border:2px solid var(--ink);overflow:hidden;margin-top:4px}
+.bar i{display:block;height:100%;width:0;border-radius:99px;transition:width .7s cubic-bezier(.3,1.3,.5,1),background .4s}
+#m-kel i{background:linear-gradient(90deg,var(--indigo),var(--violet))}#m-sik i{background:linear-gradient(90deg,var(--coral),var(--amber))}
+.pulse{animation:pulse .55s ease}
+.pd{position:absolute;right:10px;top:-15px;font-weight:900;font-size:14px;border:2.5px solid var(--ink);border-radius:99px;padding:0 9px;pointer-events:none;animation:rise 1.1s ease-out forwards;z-index:3}
+.pd.pos{background:var(--mint);color:#16693b}.pd.neg{background:var(--pink);color:#b3321f}
+
+.stepper{display:flex;gap:8px;overflow-x:auto;padding:16px 16px 6px;max-width:1120px;margin:0 auto;width:100%;scrollbar-width:none}
+.stepper::-webkit-scrollbar{display:none}
+.step{flex:none;display:flex;align-items:center;gap:8px;padding:6px 14px 6px 6px;border:2.5px solid var(--ink);border-radius:99px;background:#fff;font-size:13px;font-weight:800;color:var(--muted)}
+.step i{font-style:normal;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:#EFE9DA;font-size:12px;color:var(--ink);border:2px solid var(--ink)}
+.step.on{background:var(--indigo);color:#fff;transform:rotate(-1.5deg);box-shadow:3px 3px 0 var(--ink)}.step.on i{background:var(--amber);color:var(--ink)}
+.step.done{background:var(--mint);color:var(--ink)}.step.done i{background:var(--sage);color:#fff}
+
+main{flex:1;padding:12px 0 40px}
+#stage.enter .bento>*{animation:popin .5s cubic-bezier(.2,.9,.3,1.25) both}
+#stage.enter .bento>*:nth-child(2){animation-delay:.07s}#stage.enter .bento>*:nth-child(3){animation-delay:.14s}#stage.enter .bento>*:nth-child(4){animation-delay:.21s}
+.bento{display:grid;grid-template-columns:repeat(12,1fr);gap:18px;padding:0 16px;max-width:1120px;margin:0 auto}
+.s12{grid-column:span 12}.s8{grid-column:span 8}.s7{grid-column:span 7}.s6{grid-column:span 6}.s5{grid-column:span 5}.s4{grid-column:span 4}
+.card{background:#fff;border:2.5px solid var(--ink);border-radius:var(--r);box-shadow:6px 6px 0 var(--ink);padding:22px;min-width:0;position:relative}
+.c-grad{background:linear-gradient(135deg,#3347FF 0%,#6A4DFF 55%,#B35CFF 100%);color:#fff}
+.c-mint{background:var(--mint)}.c-sun{background:var(--sun)}.c-pink{background:var(--pink)}.c-sky{background:var(--sky)}.c-lilac{background:var(--lilac)}
+.tag{display:inline-block;font-size:12px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;padding:3px 12px;border:2.5px solid var(--ink);border-radius:99px;background:var(--amber);color:var(--ink);margin-bottom:10px;transform:rotate(-2deg)}
+.tag.w{background:#fff}
+h1{font-size:clamp(34px,6vw,60px);line-height:1;letter-spacing:-.03em;font-weight:900}
+h2{font-size:clamp(21px,2.8vw,28px);line-height:1.15;margin-bottom:8px;font-weight:900;letter-spacing:-.01em}
+h3{font-size:17px;margin-bottom:6px;font-weight:900}
+p{margin-bottom:10px}p:last-child{margin-bottom:0}
+.muted{color:var(--muted)}.c-grad .muted{color:#E3E0FF}
+.hint{font-size:13px;color:var(--muted);font-weight:700}
+.hero{display:grid;grid-template-columns:1.1fr 1fr;gap:20px;align-items:center;overflow:hidden}
+.hero>div{position:relative;z-index:1}
+.hero svg.scene{width:100%;height:auto;display:block;border:2.5px solid var(--ink);border-radius:22px;background:var(--mint);animation:bob 5s ease-in-out infinite}
+.hero .sub{font-size:clamp(17px,2.2vw,22px);font-weight:900;color:var(--amber);margin:8px 0 14px}
+.hook{border-left:5px solid var(--amber);padding:2px 0 2px 12px;font-size:15.5px;font-weight:600}
+.stk{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.stk span{border:2.5px solid var(--ink);border-radius:99px;background:#fff;color:var(--ink);font-size:12.5px;font-weight:900;padding:2px 12px}
+.stk span:nth-child(1){background:var(--amber);transform:rotate(-3deg)}.stk span:nth-child(2){background:var(--mint);transform:rotate(2deg)}.stk span:nth-child(3){background:var(--pink);transform:rotate(-1.5deg)}
+.hm{position:absolute;right:-8px;bottom:-14px;z-index:2;filter:drop-shadow(3px 3px 0 var(--ink));animation:bob 2.6s ease-in-out infinite}
+.dc{position:absolute;pointer-events:none;z-index:0}
+.dc.d1{width:120px;height:120px;border-radius:50%;background:rgba(255,197,61,.35);top:-40px;right:30%}
+.dc.d2{width:70px;height:70px;border-radius:50%;border:6px solid rgba(255,255,255,.35);bottom:-24px;left:38%}
+.dc.d3{width:26px;height:26px;background:rgba(255,255,255,.5);top:18px;left:46%;transform:rotate(20deg);border-radius:6px;animation:spin 8s linear infinite}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.field{display:grid;gap:4px;margin-bottom:10px}
+.field label{font-weight:900;font-size:14px}
+.field input{font-size:16px;padding:12px 16px;border:2.5px solid var(--ink);border-radius:18px;background:#fff;width:100%;font-weight:700}
+.field input:focus{outline:4px solid rgba(255,197,61,.7);outline-offset:1px;background:#FFFEF7}
+.field input[aria-invalid="true"]{border-color:#b3321f;background:var(--pink)}
+.err{color:#b3321f;font-size:13px;font-weight:800;min-height:18px}
+.seg{display:grid;gap:10px}
+.seg label{display:flex;gap:10px;align-items:flex-start;border:2.5px solid var(--ink);border-radius:20px;padding:11px 14px;background:#fff;cursor:pointer;transition:transform .12s}
+.seg label:hover{transform:translate(-1px,-1px) rotate(-.4deg)}
+.seg input{margin-top:4px;accent-color:var(--indigo);width:18px;height:18px}
+.seg label.on{background:var(--lilac);box-shadow:4px 4px 0 var(--ink)}
+.seg b{display:block;font-size:14.5px}.seg small{color:var(--muted);font-size:12.5px;display:block;line-height:1.35;font-weight:600}
+.disc{border:2.5px dashed var(--ink);border-radius:18px;background:var(--sun);padding:10px 14px;font-size:13px;margin-top:12px;font-weight:600}
+.mini-card h3{display:flex;align-items:center;gap:8px}
+.mini-card .em{font-size:26px}
+
+.btn{border:2.5px solid var(--ink);border-radius:18px;background:var(--indigo);color:#fff;font-weight:900;padding:13px 22px;box-shadow:5px 5px 0 var(--ink);transition:transform .12s,box-shadow .12s;font-size:15px}
+.btn:hover:not(:disabled){transform:translate(-2px,-2px) rotate(-1deg);box-shadow:7px 7px 0 var(--ink)}
+.btn:active:not(:disabled){transform:translate(4px,4px);box-shadow:1px 1px 0 var(--ink)}
+.btn:disabled{background:#D6D2C6;color:#77746a;cursor:not-allowed;box-shadow:2px 2px 0 var(--ink)}
+.btn.amber{background:var(--amber);color:var(--ink)}.btn.ghost{background:#fff;color:var(--ink)}.btn.coral{background:var(--coral);color:var(--ink)}.btn.mint{background:var(--sage);color:var(--ink)}
+.btn.go{animation:wobble 2.2s ease-in-out infinite}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.phead{display:flex;gap:14px;align-items:center;margin-bottom:14px}
+.pnum{width:52px;height:52px;flex:none;border-radius:18px;border:2.5px solid var(--ink);background:linear-gradient(135deg,var(--amber),#FF9F5A);display:grid;place-items:center;font-weight:900;font-size:24px;box-shadow:4px 4px 0 var(--ink);transform:rotate(-5deg)}
+.phead h2{margin:0}.phead p{margin:0;font-size:14px;font-weight:700}
+.sit{border:2.5px solid var(--ink);border-radius:20px;background:var(--sun);padding:12px 16px;margin:8px 0 14px;font-size:14.5px;font-weight:600}
+.sit b{display:block;font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:#8a5a00;margin-bottom:2px;font-weight:900}
+.coach{display:flex;gap:12px;align-items:flex-end;margin:6px 0 14px}
+.cm{flex:none;width:62px;height:62px;filter:drop-shadow(2px 2px 0 var(--ink))}
+.cm svg{width:100%;height:100%}
+.cb{position:relative;border:2.5px solid var(--ink);border-radius:20px 20px 20px 6px;background:var(--lilac);padding:9px 14px;font-size:14px;font-weight:700}
+.cb:before{content:"Roti · coach";display:block;font-size:11px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:var(--violet);margin-bottom:1px}
+
+/* Babak 1 */
+.compose{border:2.5px solid var(--ink);border-radius:24px;background:#fff;padding:12px 14px 14px;margin:10px 0 16px;box-shadow:4px 4px 0 var(--ink)}
+.compose .lb{font-size:12px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.draft{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--sky);border:2.5px solid var(--ink);border-radius:20px 20px 6px 20px;padding:10px 12px;line-height:1.5}
+.slot{border:2.5px dashed var(--ink);border-radius:14px;padding:4px 12px;font-size:14px;background:#fff;color:var(--muted);font-weight:700}
+button.slot{border-style:solid;background:var(--lilac);color:var(--ink);text-align:left;font-weight:700}
+button.slot:hover:not(:disabled){box-shadow:3px 3px 0 var(--ink)}
+button.slot:disabled{cursor:default;color:var(--ink)}
+.slot.q2{background:var(--mint)}.slot.q1{background:var(--sun)}.slot.q0{background:var(--pink)}
+.grp{margin-bottom:16px}
+.gh{display:flex;gap:10px;align-items:center;margin-bottom:8px}
+.gn{width:32px;height:32px;flex:none;border-radius:12px;border:2.5px solid var(--ink);background:var(--amber);display:grid;place-items:center;font-weight:900;transform:rotate(-4deg)}
+.gh b{display:block;font-size:15px;line-height:1.2}.gh small{color:var(--muted);font-size:12.5px;font-weight:700}
+.chipwrap{display:grid;gap:8px}
+.cp{text-align:left;border:2.5px solid var(--ink);border-radius:18px;background:#fff;padding:10px 14px;font-size:14px;font-weight:600;transition:transform .12s,box-shadow .12s,background .2s}
+.cp:hover:not(:disabled){transform:translate(-2px,-2px) rotate(-.5deg);box-shadow:4px 4px 0 var(--ink);background:var(--sun)}
+.cp.on{background:var(--lilac);box-shadow:4px 4px 0 var(--ink)}
+.cp.tried{background:#F1EEE6;opacity:.6;text-decoration:line-through;text-decoration-color:rgba(27,31,59,.35)}
+.cp .tt{display:block;font-size:11.5px;font-weight:900;text-decoration:none;color:#b3321f;margin-top:2px}
+.glock{border:2.5px dashed var(--ink);border-radius:18px;background:var(--mint);padding:10px 14px;font-weight:800;font-size:14px}
+.fbrow{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;border:2.5px solid var(--ink);border-radius:18px;padding:10px 14px;margin-bottom:8px;background:#fff;font-size:14px;font-weight:600}
+.fbrow.q2{background:var(--mint)}.fbrow.q1{background:var(--sun)}.fbrow.q0{background:var(--pink)}
+.qt{font-size:12px;font-weight:900;border:2.5px solid var(--ink);border-radius:99px;padding:0 10px;background:#fff;white-space:nowrap}
+.react{border:2.5px solid var(--ink);border-radius:24px;background:#fff;padding:14px;margin:12px 0;box-shadow:4px 4px 0 var(--ink)}
+.rhead{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.rhead b{display:block}.rhead span{font-size:13px;color:var(--muted);font-weight:700}
+.team{display:grid;gap:10px}
+.mem{display:flex;gap:10px;align-items:flex-end;animation:slideIn .5s both}
+.mem:nth-child(2){animation-delay:.25s}.mem:nth-child(3){animation-delay:.5s}
+.mem .f{width:50px;height:50px;flex:none;border:2.5px solid var(--ink);border-radius:50%;overflow:hidden;background:#fff}
+.mem .bb{border:2.5px solid var(--ink);border-radius:18px 18px 18px 6px;padding:8px 14px;font-size:14px;background:var(--sky);font-weight:600;position:relative}
+.mem .bb small{display:block;font-weight:900;color:var(--muted);font-size:12px}
+.mem .em{position:absolute;right:-6px;top:-14px;font-size:20px;background:#fff;border:2px solid var(--ink);border-radius:99px;padding:0 5px;line-height:1.3;animation:bob 2s ease-in-out infinite}
+.t-hi .bb{background:var(--mint)}.t-low .bb,.t-bad .bb{background:var(--pink)}.t-mid .bb{background:var(--sun)}
+.fb{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;border:2.5px solid var(--ink);border-radius:22px;padding:12px 16px;margin:14px 0;font-weight:600;box-shadow:4px 4px 0 var(--ink)}
+.fb .fm{width:58px;height:58px}.fb .fm svg{width:100%;height:100%}
+.fb.hi{background:var(--mint)}.fb.mid{background:var(--sun)}.fb.low,.fb.bad{background:var(--pink)}
+.fb b{font-weight:900}
+.fb>div>b:first-child{display:block;margin-bottom:3px;font-size:16px}
+.delta{display:inline-block;border:2.5px solid var(--ink);border-radius:99px;padding:1px 12px;font-weight:900;font-size:13px;background:#fff;margin:2px 4px 2px 0}
+.delta.pos{background:var(--mint)}.delta.neg{background:var(--pink)}
+
+/* Babak 2 */
+.ob{display:flex;gap:10px;align-items:flex-end;margin:8px 0 12px}
+.ob .bb{border:2.5px solid var(--ink);border-radius:20px 20px 20px 6px;padding:10px 16px;background:var(--pink);font-size:14.5px;font-weight:700}
+.ob .bb small{display:block;font-weight:900;color:var(--muted);font-size:12px}
+.ob .f{width:50px;height:50px;flex:none;border:2.5px solid var(--ink);border-radius:50%;overflow:hidden;background:#fff}
+.phs{display:grid;gap:10px;margin:12px 0}
+.phr{display:block;text-align:left;width:100%;color:var(--ink);background:#fff;border:2.5px solid var(--ink);border-radius:20px;padding:12px 16px;font-size:14.5px;font-weight:600;transition:transform .12s,box-shadow .12s,background .2s}
+.phr:hover:not(:disabled){transform:translate(-2px,-2px) rotate(-.4deg);box-shadow:4px 4px 0 var(--ink);background:var(--sun)}
+.phr:disabled{cursor:default}
+.phr.flag{background:var(--pink);box-shadow:4px 4px 0 var(--ink)}
+.phr.ok{background:var(--mint)}.phr.bad{background:var(--pink);border-style:dashed}.phr.fine{background:#F6F3EA}
+.ftag{display:inline-block;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.05em;border:2px solid var(--ink);border-radius:99px;background:var(--coral);padding:0 8px;margin-right:6px}
+.phr .vd{display:block;font-weight:900;font-size:13px;margin-top:8px}
+.phr .why{display:block;font-size:13px;color:#3a4062;margin-top:3px;line-height:1.4;font-weight:600}
+.starleg{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 12px}
+.starleg span{border:2.5px solid var(--ink);border-radius:99px;padding:0 12px;font-weight:900;font-size:13px;background:var(--sun)}
+.starleg span:nth-child(2n){background:var(--lilac)}
+.slotrow{display:grid;grid-template-columns:36px 1fr auto;gap:10px;align-items:center;border:2.5px dashed var(--ink);border-radius:18px;padding:8px 12px;min-height:58px;background:#fff;margin-bottom:8px;font-size:14px;font-weight:600}
+.slotrow.filled{border-style:solid;background:var(--lilac)}
+.slotrow.ok{background:var(--mint)}.slotrow.bad{background:var(--pink)}
+.slotrow .no{width:32px;height:32px;border-radius:12px;border:2.5px solid var(--ink);background:var(--amber);font-weight:900;display:grid;place-items:center;transform:rotate(-4deg)}
+.slotrow small{display:block;color:#3a4062;margin-top:3px;font-size:13px;line-height:1.4}
+.ctl{display:flex;gap:4px}
+.mini{width:32px;height:32px;border:2.5px solid var(--ink);border-radius:10px;background:#fff;font-size:13px;padding:0;line-height:1}
+.mini:hover:not(:disabled){background:var(--sun)}.mini:disabled{opacity:.35;cursor:default}
+.pool{display:grid;gap:8px;margin:10px 0 14px}
+.stepcard{text-align:left;border:2.5px solid var(--ink);border-radius:18px;background:#fff;padding:10px 14px;font-size:14px;font-weight:600;transition:transform .12s,box-shadow .12s,background .2s}
+.stepcard:hover{transform:translate(-2px,-2px) rotate(-.5deg);box-shadow:4px 4px 0 var(--ink);background:var(--sun)}
+
+/* Babak 3 */
+.sitcard{border:2.5px solid var(--ink);border-radius:22px;background:#fff;padding:14px 16px;margin-bottom:14px;font-weight:600}
+.sitcard .n{display:inline-block;font-size:12px;font-weight:900;border:2.5px solid var(--ink);border-radius:99px;padding:0 12px;background:var(--amber);margin-bottom:6px;transform:rotate(-2deg)}
+.sitcard.ok{background:var(--mint)}.sitcard.bad{background:var(--pink)}
+.sres{margin-top:10px;font-size:14px}
+.tog{display:grid;grid-template-columns:1fr 1fr;border:2.5px solid var(--ink);border-radius:18px;overflow:hidden;margin-top:10px;background:#fff}
+.tog button{border:0;background:#fff;padding:11px 8px;font-weight:900;font-size:14px;line-height:1.25;color:var(--ink);transition:background .2s,transform .12s}
+.tog button small{font-weight:700;font-size:12px;color:var(--muted)}
+.tog button+button{border-left:2.5px solid var(--ink)}
+.tog button:hover:not(:disabled){background:var(--sun)}
+.tog button.on.t{background:var(--coral)}.tog button.on.p{background:var(--sage)}
+.tog button.on small{color:var(--ink)}
+.tog button:disabled{cursor:default}
+.big{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0}
+.big>div{border:2.5px solid var(--ink);border-radius:22px;background:#fff;padding:12px;text-align:center;color:var(--ink);box-shadow:4px 4px 0 var(--ink)}
+.big>div:nth-child(1){background:var(--lilac)}.big>div:nth-child(2){background:var(--pink)}.big>div:nth-child(3){background:var(--sun)}
+.big strong{display:block;font-size:34px;line-height:1.1;font-weight:900}.big span{font-size:12.5px;color:var(--muted);font-weight:800}
+.lst{margin:6px 0 0;padding:0;list-style:none;display:grid;gap:8px}
+.lst li{border:2.5px solid var(--ink);border-radius:18px;padding:10px 14px;font-size:14px;background:#fff;font-weight:600}
+.chal label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.chal input{margin-top:3px;width:20px;height:20px;accent-color:var(--indigo);flex:none}
+.chal li.done{background:var(--mint);text-decoration:line-through;text-decoration-color:rgba(27,31,59,.4)}
+.rank{font-size:clamp(24px,3.6vw,36px);font-weight:900;line-height:1.1}
+.att{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.att span{border:2.5px solid var(--ink);border-radius:99px;background:#fff;color:var(--ink);font-size:12.5px;font-weight:800;padding:1px 12px}
+.sumhero{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center}
+.sumhero .cm{width:110px;height:110px}
+
+.foot{border-top:2.5px solid var(--ink);background:#fff;padding:16px;text-align:center;font-size:13.5px;font-weight:800}
+.foot small{display:block;font-weight:600;color:var(--muted);margin-top:3px;font-size:12.5px}
+.toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,30px);opacity:0;pointer-events:none;background:var(--ink);color:#fff;padding:10px 20px;border-radius:99px;font-weight:800;font-size:14px;z-index:50;transition:all .3s;max-width:90vw;text-align:center;border:2.5px solid #fff}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:60}
+.shake{animation:shake .45s ease}
+.mas{overflow:visible}
+@keyframes popin{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-18px)}to{opacity:1;transform:none}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes pulse{0%{transform:scale(1)}40%{transform:scale(1.06)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+@keyframes rise{0%{opacity:0;transform:translateY(10px) scale(.8)}15%{opacity:1;transform:translateY(0) scale(1.1)}100%{opacity:0;transform:translateY(-30px)}}
+@keyframes wobble{0%,100%{transform:rotate(0)}8%{transform:rotate(-2deg)}16%{transform:rotate(2deg)}24%{transform:rotate(0)}}
+@keyframes spin{to{transform:rotate(380deg)}}
+
+@media(max-width:860px){
+  .s8,.s7,.s6,.s5,.s4{grid-column:span 12}
+  .hero,.two{grid-template-columns:1fr}
+  .topbar{position:static}
+  .tb1{padding:8px 12px}
+  .chips{order:3;flex:1 1 100%;justify-content:flex-start}
+  .meters{padding:0 12px 8px;gap:6px}
+  .meter{padding:5px 8px 6px}.ml{font-size:10px;flex-direction:column;gap:0}.mv{font-size:17px}
+  .big strong{font-size:24px}
+  .card{padding:16px;box-shadow:5px 5px 0 var(--ink);border-radius:24px}
+  .slotrow{grid-template-columns:34px 1fr}.slotrow .ctl{grid-column:2}
+  .hm{right:0;bottom:-10px}.hm svg{width:70px;height:70px}
+  .sumhero{grid-template-columns:1fr}.sumhero .cm{display:none}
+  .fb{grid-template-columns:auto 1fr;padding:12px}.fb .fm{width:42px;height:42px;align-self:start}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="tb1">
+    <div class="brand"><div class="logo" id="logo"></div><div><b>Persuasion Arena</b><small>Materi 4.3 · Misi 4 · Komunikasi Persuasif</small></div></div>
+    <div class="chips" id="chips" hidden><span class="chip" id="c-user"></span><span class="chip alt" id="c-sc" hidden></span></div>
+    <div class="snd"><button class="sbtn" id="btn-mus" type="button" aria-label="Musik latar" aria-pressed="true" title="Musik latar">🎵</button><button class="sbtn" id="btn-sfx" type="button" aria-label="Efek suara" aria-pressed="true" title="Efek suara">🔊</button></div>
+  </div>
+  <div class="meters" id="meters" hidden aria-label="Indikator status">
+    <div class="meter" id="m-kel"><div class="ml"><span>✨ Keluwesan &amp; “The Why”</span><b class="mv">—</b></div><div class="bar"><i></i></div></div>
+    <div class="meter" id="m-sik"><div class="ml"><span>🎯 Ketepatan Sikap &amp; STAR</span><b class="mv">—</b></div><div class="bar"><i></i></div></div>
+    <div class="meter" id="m-trust"><div class="ml"><span>💛 Trust &amp; Kesiapan Tim</span><b class="mv">50</b></div><div class="bar"><i></i></div></div>
+  </div>
+</header>
+<nav class="stepper" id="stepper" aria-label="Tahapan permainan"></nav>
+<main><div id="stage"></div></main>
+<footer class="foot">Education &amp; Training Department - Food Beverage Industry (2026)<small>Situasi pabrik dalam game ini adalah ilustrasi untuk pembelajaran.</small></footer>
+<div class="toast" id="toast" role="status"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+<noscript><p style="padding:20px">Game ini membutuhkan JavaScript aktif.</p></noscript>
+
+<script>
+(function(){
+'use strict';
+
+/* ---------- helpers ---------- */
+var REDUCE=!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+var $=function(s,r){return (r||document).querySelector(s);};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));};
+var clamp=function(v,a,b){return Math.max(a,Math.min(b,v));};
+var esc=function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');};
+var range=function(n){var a=[];for(var i=0;i<n;i++)a.push(i);return a;};
+var shuffle=function(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;};
+var shuffleNot=function(n,bad){var a,k=0;do{a=shuffle(range(n));k++;}while(bad&&a.join()===bad.join()&&k<20);return a;};
+var stage=$('#stage');
+
+/* ---------- ilustrasi SVG (tanpa helm) ---------- */
+var LOGO='<svg viewBox="0 0 40 40" width="34" height="34" aria-hidden="true"><path d="M5 8 h30 a3 3 0 0 1 3 3 v14 a3 3 0 0 1 -3 3 h-14 l-8 7 v-7 h-8 a3 3 0 0 1 -3 -3 v-14 a3 3 0 0 1 3 -3z" fill="#fff" stroke="#1D2340" stroke-width="2.4" stroke-linejoin="round"/><ellipse cx="20" cy="18" rx="10" ry="6" fill="#E9B26A" stroke="#1D2340" stroke-width="2"/><path d="M14 16 l3 -3 M20 15 l3 -3 M26 16 l3 -3" stroke="#fff" stroke-width="1.8" stroke-linecap="round" transform="translate(-2,3)"/></svg>';
+function person(x,y,o){
+  var shirt=o.batik?'url(#batik)':o.shirt;
+  return '<g transform="translate('+x+','+y+')">'+
+  '<rect x="-24" y="26" width="48" height="62" rx="18" fill="'+shirt+'" stroke="#1D2340" stroke-width="2.4"/>'+
+  (o.apron?'<path d="M-14 40 h28 v44 h-28z" fill="#FFFDF8" stroke="#1D2340" stroke-width="2"/>':'')+
+  '<path d="M-9 27 l9 12 l9 -12" fill="#fff" stroke="#1D2340" stroke-width="2" stroke-linejoin="round"/>'+
+  '<circle cx="0" cy="6" r="18" fill="'+o.skin+'" stroke="#1D2340" stroke-width="2.4"/>'+
+  '<path d="M-19 4 a19 19 0 0 1 38 0 q-10 -8 -19 -6 q-9 -2 -19 6z" fill="'+o.hair+'" stroke="#1D2340" stroke-width="2"/>'+
+  '<circle cx="-6" cy="9" r="1.9" fill="#1D2340"/><circle cx="6" cy="9" r="1.9" fill="#1D2340"/>'+
+  '<path d="M-5 15 q5 4 10 0" stroke="#1D2340" stroke-width="1.9" fill="none" stroke-linecap="round"/></g>';
+}
+function bubble(x,y,w,inner,fill){
+  return '<g transform="translate('+x+','+y+')"><rect width="'+w+'" height="32" rx="14" fill="'+(fill||'#fff')+'" stroke="#1D2340" stroke-width="2.5"/><path d="M14 31 l-3 9 l12 -9z" fill="'+(fill||'#fff')+'" stroke="#1D2340" stroke-width="2.5" stroke-linejoin="round"/><rect x="12" y="29" width="12" height="4" fill="'+(fill||'#fff')+'"/>'+inner+'</g>';
+}
+function heroSVG(){
+  var s='<svg viewBox="0 0 640 340" role="img" aria-label="Ilustrasi ruang koordinasi pabrik roti: tiga rekan berdiskusi di meja koordinasi dengan balon percakapan dan indikator sinyal respons tim">';
+  s+='<defs><pattern id="batik" width="14" height="14" patternUnits="userSpaceOnUse"><rect width="14" height="14" fill="#2B3FD6"/><path d="M7 1 l5 6 l-5 6 l-5 -6z" fill="none" stroke="#F6B93B" stroke-width="1.6"/><circle cx="7" cy="7" r="1.5" fill="#FFFDF8"/></pattern></defs>';
+  s+='<rect width="640" height="340" fill="#D6F0E2"/><rect y="270" width="640" height="70" fill="#BFE3CF"/>';
+  s+='<g transform="translate(30,26)"><rect width="170" height="92" rx="14" fill="#FFFDF8" stroke="#1D2340" stroke-width="3"/><text x="14" y="26" font-size="13" font-weight="800" fill="#1D2340" font-family="Trebuchet MS,Arial">Sinyal respons tim</text>';
+  [[18,48,16],[50,40,24],[82,32,32],[114,24,40]].forEach(function(b,i){s+='<rect x="'+b[0]+'" y="'+(84-b[2]-8)+'" width="22" height="'+b[2]+'" rx="5" fill="'+(i<3?'#7FAE8C':'#E8E3D6')+'" stroke="#1D2340" stroke-width="2.2"/>';});
+  s+='</g>';
+  s+='<rect x="440" y="36" width="170" height="236" rx="10" fill="#F4E3C8" stroke="#1D2340" stroke-width="3"/>';
+  for(var r=0;r<4;r++){var y=84+r*50;
+    s+='<rect x="450" y="'+(y+8)+'" width="150" height="8" rx="3" fill="#C9A06A" stroke="#1D2340" stroke-width="2"/>';
+    for(var k=0;k<4;k++){var x=476+k*36;
+      s+='<ellipse cx="'+x+'" cy="'+(y-2)+'" rx="15" ry="11" fill="#E9B26A" stroke="#1D2340" stroke-width="2"/><path d="M'+(x-7)+' '+(y-6)+' l4 -4 M'+x+' '+(y-6)+' l4 -4 M'+(x+7)+' '+(y-6)+' l4 -4" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".8"/>';}}
+  s+=person(190,150,{skin:'#F1C9A5',hair:'#2D2A32',batik:true});
+  s+=person(290,146,{skin:'#D9A47C',hair:'#5B3A29',shirt:'#7FAE8C',apron:true});
+  s+=person(390,150,{skin:'#F6D5B8',hair:'#C9822B',shirt:'#FF7A66'});
+  s+='<rect x="110" y="228" width="340" height="40" rx="18" fill="#2B3FD6" stroke="#1D2340" stroke-width="3"/><path d="M140 266 v40 M420 266 v40" stroke="#1D2340" stroke-width="5" stroke-linecap="round"/>';
+  s+='<rect x="150" y="206" width="46" height="26" rx="4" fill="#fff" stroke="#1D2340" stroke-width="2.5" transform="rotate(-6 173 219)"/><rect x="330" y="208" width="40" height="22" rx="4" fill="#FFF6D8" stroke="#1D2340" stroke-width="2.5" transform="rotate(5 350 219)"/>';
+  s+=bubble(150,84,60,'<path d="M14 16 h32" stroke="#FF7A66" stroke-width="4" stroke-linecap="round"/>');
+  s+=bubble(250,78,70,'<path d="M14 16 q8 8 16 0 M38 16 q8 8 16 0" stroke="#2B3FD6" stroke-width="3.5" fill="none" stroke-linecap="round"/>','#FFF0CC');
+  s+=bubble(352,84,60,'<path d="M16 17 l7 7 l16 -14" stroke="#1F8A5B" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>');
+  return s+'</svg>';
+}
+function faceSVG(mood,c){
+  var mouth=mood==='open'?'<path d="M15 28 q7 7 14 0" stroke="#1D2340" stroke-width="2" fill="none" stroke-linecap="round"/>':
+            mood==='neutral'?'<path d="M16 30 h12" stroke="#1D2340" stroke-width="2" fill="none" stroke-linecap="round"/>':
+            '<path d="M15 32 q7 -6 14 0" stroke="#1D2340" stroke-width="2" fill="none" stroke-linecap="round"/>';
+  var brows=mood==='tense'?'<path d="M11 13 l8 3 M33 13 l-8 3" stroke="#1D2340" stroke-width="2" stroke-linecap="round"/>':'';
+  return '<svg viewBox="0 0 44 44" width="100%" height="100%" aria-hidden="true"><rect width="44" height="44" fill="'+c[2]+'"/><circle cx="22" cy="23" r="17" fill="'+c[0]+'" stroke="#1D2340" stroke-width="2"/><path d="M5 21 a17 17 0 0 1 34 0 q-8 -7 -17 -5 q-9 -2 -17 5z" fill="'+c[1]+'" stroke="#1D2340" stroke-width="1.6"/><circle cx="16" cy="23" r="1.8" fill="#1D2340"/><circle cx="28" cy="23" r="1.8" fill="#1D2340"/>'+brows+mouth+'</svg>';
+}
+function signalSVG(n,color){
+  var hs=[10,18,26,34],s='<svg viewBox="0 0 64 40" width="56" height="36" aria-hidden="true">';
+  for(var i=0;i<4;i++)s+='<rect x="'+(i*15+2)+'" y="'+(38-hs[i])+'" width="11" height="'+hs[i]+'" rx="3" fill="'+(i<n?color:'#E8E3D6')+'" stroke="#1D2340" stroke-width="2"/>';
+  return s+'</svg>';
+}
+var LOOKS=[[ '#F1C9A5','#2D2A32','#E3E7FF'],['#D9A47C','#5B3A29','#FFF0CC'],['#F6D5B8','#C9822B','#D6F0E2']];
+
+/* ---------- data skenario ---------- */
+var SC={
+k1:{
+ id:'k1',name:'Kasus 1 · Penyesuaian Jadwal & Alur Kerja Sore',short:'Kasus 1 · Jadwal & Alur Sore',
+ desc:'Pengiriman dimajukan 30 menit sehingga jadwal loyang dan serah terima antar-shift ikut bergeser.',
+ b1:{
+  situasi:'Mulai besok, pengiriman roti ke gerai dimajukan 30 menit. Loyang batch sore harus keluar oven lebih awal, dan catatan serah terima antar-shift di Lini 2 harus lengkap pukul 15.30, bukan 16.00. Anda akan menyampaikannya di briefing awal shift sore tanpa terdengar seperti perintah mentah.',
+  slots:[
+   {label:'Empati / Konteks',hint:'Akui kondisi atau perasaan tim lebih dulu',chips:[
+    {t:'Saya tahu kalian sudah hafal ritme jadwal sore selama ini, jadi perubahan mendadak ini pasti tidak enak.',q:2,why:'Mengakui kebiasaan dan beban tim sebelum menyampaikan arahan.'},
+    {t:'Ada perubahan jadwal untuk besok.',q:1,why:'Menyebut konteks, tetapi datar dan tidak menunjukkan empati.'},
+    {t:'Pokoknya mulai besok jadwal berubah, tidak ada diskusi.',q:0,why:'Menutup ruang bicara sejak kalimat pertama, terdengar kaku.'},
+    {t:'Jangan banyak tanya, ini sudah keputusan atas.',q:0,why:'Memakai otoritas sebagai tameng, bukan penjelasan.'}]},
+   {label:'Alasan “The Why” (Logos)',hint:'Jelaskan alasan dan dampaknya agar masuk akal',chips:[
+    {t:'Pengiriman ke gerai dimajukan 30 menit, jadi roti sore harus keluar oven lebih awal supaya tetap segar saat tiba.',q:2,why:'Memberi alasan yang jelas beserta manfaatnya.'},
+    {t:'Pengiriman berubah, jadi jadwal kita ikut berubah.',q:1,why:'Ada alasan, tetapi belum menjelaskan dampak dan manfaatnya bagi tim.'},
+    {t:'Ini permintaan dari atas, jadi kita ikuti saja.',q:0,why:'Tidak ada alasan yang bisa dipahami tim.'},
+    {t:'Karena memang harus begitu.',q:0,why:'Tidak menjelaskan apa pun.'}]},
+   {label:'Ajakan Kolaboratif',hint:'Ajak tim terlibat, bukan sekadar menyuruh',chips:[
+    {t:'Yuk kita tentukan bersama urutan loyang yang paling aman digeser, dan saya ikut bantu di Lini 2 selama minggu pertama.',q:2,why:'Mengajak ikut menentukan cara dan menawarkan dukungan nyata.'},
+    {t:'Mohon dicoba dulu ya, nanti kita lihat.',q:1,why:'Cukup sopan, tetapi belum mengajak tim terlibat.'},
+    {t:'Laksanakan, dan jangan ada yang terlambat.',q:0,why:'Perintah mentah yang membuat tim bertahan.'},
+    {t:'Saya tidak mau dengar alasan telat.',q:0,why:'Menekan dan mengancam, bukan mengajak.'}]}],
+  reactions:{
+   hi:[{n:'Mas Bagas',line:'Oh, jadi gara-gara jadwal kirim. Oke, saya paham. Urutan loyangnya kita atur bareng ya, Pak.'},{n:'Bu Rina',line:'Terima kasih sudah dijelaskan dan ditawari bantuan. Saya bisa mulai besok.'},{n:'Dedi',line:'Kalau begitu catatan serah terimanya saya siapkan lebih awal.'}],
+   mid:[{n:'Mas Bagas',line:'Paham sih, tapi saya masih bingung bagian serah terimanya.'},{n:'Bu Rina',line:'Oke, kami coba dulu...'},{n:'Dedi',line:'Semoga tidak berantakan di hari pertama.'}],
+   low:[{n:'Mas Bagas',line:'(melipat tangan) ... Siap, Pak.'},{n:'Bu Rina',line:'Baik. (berbisik) Kok mendadak begini.'},{n:'Dedi',line:'Ya sudah, dijalankan saja.'}],
+   bad:[{n:'Mas Bagas',line:'(menghela napas) Terserah Bapak saja.'},{n:'Bu Rina',line:'Kami bukan mesin, Pak...'},{n:'Dedi',line:'(menunduk, tidak menjawab)'}]}
+ },
+ b2:{
+  objector:{n:'Mas Bagas · Operator Oven',line:'“Pak, kalau digeser 30 menit, serah terima kami tidak keburu. Kenapa harus kami lagi yang menyesuaikan?”'},
+  phrases:[
+   {t:'“Sudah, jangan banyak alasan. Ikuti saja jadwalnya.”',flag:true,type:'Kaku',why:'Menutup ruang bicara dan tidak memberi alasan, sehingga terdengar seperti perintah mentah.'},
+   {t:'“Saya dengar serah terimanya yang paling mengganjal. Bagian mana yang paling sulit?”',flag:false,why:'Mengulang keberatan lalu bertanya. Ini sikap mendengar, bukan reaktif.'},
+   {t:'“Dari dulu juga bisa, kamu saja yang tidak mau.”',flag:true,type:'Reaktif',why:'Membalas dengan menyalahkan pribadi, bukan membahas hambatannya.'},
+   {t:'“Catatan serah terima wajib lengkap pukul 15.30. Itu batas yang tidak bergeser, supaya pengiriman tidak telat.”',flag:false,why:'Tegas tetapi sopan: batasnya jelas dan ada alasannya. Ini assertive, bukan kaku.'},
+   {t:'“Kalau tidak sanggup, bilang saja, nanti saya ganti orang.”',flag:true,type:'Menekan',why:'Ancaman halus yang membuat tim takut, bukan terbuka.'},
+   {t:'“Boleh kita coba dua hari dulu, lalu evaluasi bersama?”',flag:false,why:'Ajakan kolaboratif yang tetap menjaga arah.'},
+   {t:'“Memangnya cuma kamu yang capek?”',flag:true,type:'Reaktif',why:'Respons emosional yang meremehkan keberatan.'},
+   {t:'“Terima kasih sudah jujur. Ini memang perubahan besar buat kalian.”',flag:false,why:'Mengakui perasaan tim dan membangun trust.'}],
+  star:[
+   {lbl:'Stop',t:'Tahan reaksi pertama. Tarik napas dulu sebelum membalas.',why:'Reaksi pertama biasanya defensif atau menyalahkan. Jeda mencegahnya keluar.'},
+   {lbl:'Think',t:'Pikirkan apa yang sebenarnya dikhawatirkan Mas Bagas di balik keberatan itu.',why:'Keberatan sering menyembunyikan kekhawatiran lain, misalnya beban serah terima.'},
+   {lbl:'Assess',t:'Nilai: ini soal batas wajib, atau soal cara dan waktu yang bisa diatur bersama?',why:'Menentukan sikap: tegas untuk batas wajib, persuasif untuk hal yang bisa dirundingkan.'},
+   {lbl:'Respond',t:'Sampaikan respons: akui kekhawatirannya, jelaskan alasannya, lalu tawarkan opsi.',why:'Respons baru efektif setelah tiga langkah sebelumnya selesai.'}]
+ },
+ b3:[
+  {t:'Seorang operator melewatkan pencatatan suhu oven pada batch sore karena terburu-buru. Pencatatan ini syarat wajib audit mutu.',mode:'T',why:'Ini batas wajib yang menyangkut mutu dan audit. Sampaikan jelas, singkat, disertai alasan, tanpa tawar-menawar, dan tetap hormat.'},
+  {t:'Tim Lini 2 tampak lelah setelah dua hari berturut-turut mengejar jadwal geser, dan beberapa mulai mengeluh pelan.',mode:'P',why:'Ini hambatan, bukan pelanggaran. Dengarkan, akui, lalu ajak mencari penyesuaian beban bersama.'},
+  {t:'Beberapa orang keberatan dengan jadwal serah terima baru karena sudah terbiasa pulang tepat waktu.',mode:'P',why:'Cara dan waktu bisa dibicarakan selama batas pukul 15.30 terjaga. Ajak bahas opsi bersama.'}]
+},
+k2:{
+ id:'k2',name:'Kasus 2 · Menjaga Standar Mutu & Merespons Keberatan Tim',short:'Kasus 2 · Standar Mutu & Keberatan',
+ desc:'Suhu proofing melenceng di tiga batch, lalu cek tambahan memicu keberatan tim.',
+ b1:{
+  situasi:'Tiga batch terakhir menunjukkan suhu ruang proofing keluar dari batas, dan roti yang gagal mutu bisa ditarik dari gerai. Anda perlu mengajak tim menambah pengecekan suhu setiap 2 jam tanpa terdengar menyalahkan atau memerintah mentah.',
+  slots:[
+   {label:'Empati / Konteks',hint:'Akui kondisi atau perasaan tim lebih dulu',chips:[
+    {t:'Saya tahu kalian sedang memegang target loyang, jadi cek tambahan ini terasa seperti beban baru.',q:2,why:'Mengakui beban kerja tim sebelum meminta sesuatu.'},
+    {t:'Ada tambahan pengecekan mulai hari ini.',q:1,why:'Menyebut konteks, tetapi datar dan tanpa empati.'},
+    {t:'Cek suhu itu tugas kalian, jangan sampai lalai lagi.',q:0,why:'Menyalahkan sejak awal, tim langsung defensif.'},
+    {t:'Kalau ada yang melenceng, itu kesalahan kalian.',q:0,why:'Menuding, bukan membuka percakapan.'}]},
+   {label:'Alasan “The Why” (Logos)',hint:'Jelaskan alasan dan dampaknya agar masuk akal',chips:[
+    {t:'Tiga batch terakhir suhunya keluar dari batas, dan roti yang gagal mutu bisa ditarik dari gerai. Itu merugikan kita semua.',q:2,why:'Memberi data dan dampak nyata yang dirasakan bersama.'},
+    {t:'Standar mutu memang harus dijaga.',q:1,why:'Benar, tetapi umum dan belum menjawab mengapa cek tambahan diperlukan.'},
+    {t:'Ini aturan, titik.',q:0,why:'Tidak ada alasan yang bisa dipahami tim.'},
+    {t:'Karena kalian kurang teliti.',q:0,why:'Menyalahkan, bukan menjelaskan.'}]},
+   {label:'Ajakan Kolaboratif',hint:'Ajak tim terlibat, bukan sekadar menyuruh',chips:[
+    {t:'Yuk kita tentukan bersama jam cek yang paling pas dengan alur kerja, dan saya ikut turun mengecek di dua putaran pertama.',q:2,why:'Mengajak menentukan cara dan menawarkan dukungan nyata.'},
+    {t:'Tolong dijalankan dulu ya.',q:1,why:'Sopan, tetapi belum mengajak tim terlibat.'},
+    {t:'Pokoknya cek tiap 2 jam, tidak ada tawar-menawar.',q:0,why:'Perintah mentah yang menutup dialog soal cara pelaksanaan.'},
+    {t:'Kalau tidak bisa, saya cari orang lain.',q:0,why:'Ancaman yang menekan.'}]}],
+  reactions:{
+   hi:[{n:'Bu Rina',line:'Oh, jadi karena tiga batch itu. Jelas sekarang. Boleh kita atur jam cek-nya bareng?'},{n:'Pak Joko',line:'Kalau Bapak ikut turun di putaran awal, saya lebih tenang.'},{n:'Sari',line:'Saya siapkan lembar catatan suhu supaya cepat diisi.'}],
+   mid:[{n:'Bu Rina',line:'Paham, tapi targetnya bagaimana ya?'},{n:'Pak Joko',line:'Kami coba dulu saja...'},{n:'Sari',line:'Semoga tidak bikin loyang menumpuk.'}],
+   low:[{n:'Bu Rina',line:'(diam) ... Baik, Pak.'},{n:'Pak Joko',line:'(berbisik) Salah kami lagi rupanya.'},{n:'Sari',line:'Ya, dijalankan saja.'}],
+   bad:[{n:'Bu Rina',line:'(menghela napas) Terserah Bapak.'},{n:'Pak Joko',line:'Kalau dari awal dituduh, buat apa kami bicara.'},{n:'Sari',line:'(menunduk, tidak menjawab)'}]}
+ },
+ b2:{
+  objector:{n:'Bu Rina · Staf Proofing',line:'“Pak, cek suhu tiap 2 jam bikin loyang menumpuk. Target kami jadi molor, siapa yang tanggung?”'},
+  phrases:[
+   {t:'“Target itu urusan kalian, cek suhu tetap harus jalan.”',flag:true,type:'Kaku',why:'Mengabaikan kekhawatiran tim dan tidak menawarkan jalan keluar.'},
+   {t:'“Saya paham target loyang juga ditagih. Di titik mana cek paling menyita waktu?”',flag:false,why:'Mengakui tekanan target lalu menggali masalah sebenarnya.'},
+   {t:'“Dari tadi mengeluh terus, kerja saja dulu.”',flag:true,type:'Reaktif',why:'Meremehkan keberatan dan membalas dengan emosi.'},
+   {t:'“Batas suhu proofing tidak bisa dikurangi karena menyangkut mutu. Cara dan jam cek yang bisa kita atur bersama.”',flag:false,why:'Tegas pada batas wajib dan terbuka pada caranya. Ini assertive, bukan kaku.'},
+   {t:'“Kalau mutu turun lagi, saya catat itu atas nama kamu.”',flag:true,type:'Menekan',why:'Ancaman yang membuat tim fokus menghindari kesalahan, bukan menyelesaikan masalah.'},
+   {t:'“Bagaimana kalau cek dibagi bergantian per lini supaya tidak ada yang tertahan?”',flag:false,why:'Ajakan kolaboratif dengan opsi konkret.'},
+   {t:'“Jangan melawan, ini perintah.”',flag:true,type:'Kaku',why:'Menyamakan keberatan dengan perlawanan dan menutup dialog.'},
+   {t:'“Terima kasih sudah bilang ada hambatan di target. Itu informasi penting.”',flag:false,why:'Menghargai keterbukaan tim, sehingga trust terjaga.'}],
+  star:[
+   {lbl:'Stop',t:'Tahan reaksi pertama. Tarik napas dulu sebelum membalas.',why:'Reaksi pertama biasanya defensif atau menyalahkan. Jeda mencegahnya keluar.'},
+   {lbl:'Think',t:'Pikirkan apa yang sebenarnya dikhawatirkan Bu Rina di balik keberatan soal loyang menumpuk.',why:'Di balik keberatan sering ada kekhawatiran soal target dan beban kerja.'},
+   {lbl:'Assess',t:'Nilai: ini soal batas mutu wajib, atau soal jam dan pembagian cek yang bisa diatur?',why:'Menentukan sikap: tegas untuk batas mutu, persuasif untuk teknis pelaksanaan.'},
+   {lbl:'Respond',t:'Sampaikan respons: akui kekhawatirannya, jelaskan alasannya, lalu tawarkan opsi.',why:'Respons baru efektif setelah tiga langkah sebelumnya selesai.'}]
+ },
+ b3:[
+  {t:'Seorang staf menaruh adonan di ruang proofing melewati batas waktu karena mengejar target, tanpa mengecek suhu.',mode:'T',why:'Batas waktu dan suhu proofing adalah standar mutu wajib. Tegas dengan alasan jelas tanpa menyalahkan pribadi.'},
+  {t:'Tim keberatan dengan cek tambahan tiap 2 jam karena merasa mengganggu ritme kerja.',mode:'P',why:'Kewajiban cek tetap, tetapi jam dan pembagiannya bisa dirundingkan. Ajak mencari cara yang pas.'},
+  {t:'Seorang staf sudah dua kali mengabaikan batas suhu penyimpanan bahan dan menjawab “nanti saja”.',mode:'T',why:'Pelanggaran berulang atas batas wajib. Perlu ketegasan yang jelas dan konsekuensi yang disampaikan dengan sopan.'}]
+}};
+var TIER={
+ hi:{lbl:'Terbuka & paham',bars:4,color:'#59C08A',mood:['open','open','open'],emo:['🔥','👏','✨'],head:'Gas, luwes banget! ✨',txt:'Susunan ini luwes: tim merasa dihargai, paham alasannya, dan diajak terlibat.',dt:0},
+ mid:{lbl:'Mulai paham, masih ragu',bars:3,color:'#FFC53D',mood:['neutral','neutral','tense'],emo:['🤔','😐','😕'],head:'Dikit lagi, hampir pas 👀',txt:'Arahannya cukup jelas, tetapi masih ada bagian yang terasa datar atau kurang meyakinkan.',dt:-3},
+ low:{lbl:'Tegang & menarik ulur',bars:2,color:'#FF6F5E',mood:['tense','neutral','tense'],emo:['😬','😶','🙄'],head:'Masih kaku nih 😬',txt:'Arahan masih terdengar kaku. Tim menurut di permukaan, tetapi cenderung menarik ulur.',dt:-6},
+ bad:{lbl:'Tertekan',bars:1,color:'#FF6F5E',mood:['tense','tense','tense'],emo:['😞','😤','😶'],head:'Waduh, kedengarannya perintah mentah 😵',txt:'Tanpa empati, tanpa alasan, tanpa ajakan. Tim merasa ditekan dan menutup diri.',dt:-12}
+};
+var QL=['Kaku','Cukup','Luwes'];
+var SKILL={
+ ajakan:{n:'Menyusun kalimat ajakan',s:'Kalimat ajakan Anda luwes: empati, “the why”, dan ajakan kolaboratif hadir sekaligus.',i:'Biasakan menyusun arahan dalam tiga bagian: akui kondisi tim, jelaskan “the why”, lalu ajak tim terlibat.'},
+ filter:{n:'Menyaring kalimat kaku & menekan',s:'Anda peka membedakan kalimat kaku, menekan, atau reaktif dari ketegasan yang sehat.',i:'Latih telinga membedakan tegas yang sopan dari kalimat yang menekan atau reaktif. Tegas tidak selalu kaku.'},
+ star:{n:'Urutan jeda STAR',s:'Anda menjaga jeda STAR dengan urutan yang tepat: Stop, Think, Assess, Respond.',i:'Biasakan urutan Stop, Think, Assess, baru Respond setiap kali ada keberatan.'},
+ mode:{n:'Memilih tegas vs persuasif',s:'Anda tepat memilih kapan harus tegas pada batas wajib dan kapan persuasif.',i:'Tanyakan dulu: ini batas wajib atau hal yang bisa dirundingkan? Baru pilih sikap.'}
+};
+
+/* ---------- Maskot "Roti" ---------- */
+function mascot(mood,size){
+  var eyes,mouth,brows='',extra='';
+  if(mood==='happy'||mood==='cheer'){
+    eyes='<path d="M24 43 q5 -7 10 0 M46 43 q5 -7 10 0" stroke="#1B1F3B" stroke-width="3" fill="none" stroke-linecap="round"/>';
+    mouth=mood==='cheer'?'<path d="M31 49 q9 14 18 0z" fill="#FF6F5E" stroke="#1B1F3B" stroke-width="2.6" stroke-linejoin="round"/>':'<path d="M33 50 q7 8 14 0" stroke="#1B1F3B" stroke-width="3" fill="none" stroke-linecap="round"/>';
+    extra='<path d="M68 12 l2.2 5.5 l5.5 2.2 l-5.5 2.2 l-2.2 5.5 l-2.2 -5.5 l-5.5 -2.2 l5.5 -2.2z" fill="#FFC53D" stroke="#1B1F3B" stroke-width="1.8" stroke-linejoin="round"/><path d="M11 18 l1.6 3.8 l3.8 1.6 l-3.8 1.6 l-1.6 3.8 l-1.6 -3.8 l-3.8 -1.6 l3.8 -1.6z" fill="#fff" stroke="#1B1F3B" stroke-width="1.6" stroke-linejoin="round"/>';
+  }else if(mood==='worried'){
+    eyes='<circle cx="29" cy="43" r="3.3" fill="#1B1F3B"/><circle cx="51" cy="43" r="3.3" fill="#1B1F3B"/>';
+    brows='<path d="M22 35 l11 3.5 M58 35 l-11 3.5" stroke="#1B1F3B" stroke-width="2.8" stroke-linecap="round"/>';
+    mouth='<path d="M31 55 q4.5 -5 9 0 q4.5 5 9 0" stroke="#1B1F3B" stroke-width="2.8" fill="none" stroke-linecap="round"/>';
+    extra='<path d="M66 28 q4 6 0 9.5 q-4 -3.5 0 -9.5z" fill="#8FD3FF" stroke="#1B1F3B" stroke-width="1.7"/>';
+  }else{
+    eyes='<circle cx="29" cy="43" r="3.3" fill="#1B1F3B"/><circle cx="51" cy="43" r="3.3" fill="#1B1F3B"/>';
+    mouth='<path d="M34 53 h12" stroke="#1B1F3B" stroke-width="3" stroke-linecap="round"/>';
+  }
+  return '<svg class="mas" viewBox="0 0 80 80" width="'+size+'" height="'+size+'" aria-hidden="true">'+
+    '<ellipse cx="28" cy="68" rx="9" ry="4.5" fill="#C9863A" stroke="#1B1F3B" stroke-width="2.4"/><ellipse cx="52" cy="68" rx="9" ry="4.5" fill="#C9863A" stroke="#1B1F3B" stroke-width="2.4"/>'+
+    '<path d="M14 65 Q7 65 7 54 Q7 31 24 25 Q28 11 40 11 Q52 11 56 25 Q73 31 73 54 Q73 65 66 65 Z" fill="#F0B866" stroke="#1B1F3B" stroke-width="3" stroke-linejoin="round"/>'+
+    '<path d="M30 21 l4 -5 M40 19 l4 -5 M50 21 l4 -5" stroke="#FFF3D6" stroke-width="3" stroke-linecap="round"/>'+
+    '<ellipse cx="20" cy="52" rx="5.5" ry="3.6" fill="#FF6F5E" opacity=".55"/><ellipse cx="60" cy="52" rx="5.5" ry="3.6" fill="#FF6F5E" opacity=".55"/>'+
+    brows+eyes+mouth+extra+'</svg>';
+}
+function moodOf(t){return t>=65?'happy':(t>=35?'neutral':'worried');}
+function setMascot(m){var l=$('#logo');if(l)l.innerHTML=mascot(m,44);}
+
+/* ---------- Audio (Web Audio, tanpa file eksternal) ---------- */
+var A={ctx:null,mus:null,sfx:null,musicOn:true,sfxOn:true,timer:null,next:0,step:0};
+try{if(localStorage.getItem('pa_music')==='0')A.musicOn=false;if(localStorage.getItem('pa_sfx')==='0')A.sfxOn=false;}catch(e){}
+function ac(){
+  if(!A.ctx){
+    var C=window.AudioContext||window.webkitAudioContext;if(!C)return null;
+    try{A.ctx=new C();}catch(e){return null;}
+    var m=A.ctx.createGain();m.gain.value=0.9;m.connect(A.ctx.destination);
+    A.mus=A.ctx.createGain();A.mus.gain.value=0.36;A.mus.connect(m);
+    A.sfx=A.ctx.createGain();A.sfx.gain.value=0.9;A.sfx.connect(m);
+  }
+  if(A.ctx.state==='suspended'){try{A.ctx.resume();}catch(e){}}
+  return A.ctx;
+}
+function mf(m){return 440*Math.pow(2,(m-69)/12);}
+function tone(f,t,d,type,v,dest,to){
+  var c=A.ctx,o=c.createOscillator(),g=c.createGain();
+  o.type=type;o.frequency.setValueAtTime(f,t);
+  if(to)o.frequency.exponentialRampToValueAtTime(to,t+d);
+  g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(v,t+0.012);g.gain.exponentialRampToValueAtTime(0.0001,t+d);
+  o.connect(g);g.connect(dest);o.start(t);o.stop(t+d+0.05);
+}
+function noise(t,d,f1,f2,v,dest){
+  var c=A.ctx,n=Math.floor(c.sampleRate*d),b=c.createBuffer(1,n,c.sampleRate),a=b.getChannelData(0);
+  for(var i=0;i<n;i++)a[i]=Math.random()*2-1;
+  var s=c.createBufferSource();s.buffer=b;
+  var f=c.createBiquadFilter();f.type='bandpass';f.frequency.setValueAtTime(f1,t);f.frequency.exponentialRampToValueAtTime(f2,t+d);f.Q.value=1.2;
+  var g=c.createGain();g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(0.0001,t+d);
+  s.connect(f);f.connect(g);g.connect(dest);s.start(t);
+}
+var SFX={
+  tap:function(t){tone(700,t,0.05,'square',0.03,A.sfx,500);},
+  pop:function(t){tone(520,t,0.08,'sine',0.16,A.sfx,860);},
+  flag:function(t){tone(660,t,0.06,'triangle',0.12,A.sfx);tone(990,t+0.05,0.09,'triangle',0.12,A.sfx);},
+  good:function(t){[784,988,1319].forEach(function(f,i){tone(f,t+i*0.07,0.16,'triangle',0.16,A.sfx);});},
+  bad:function(t){tone(220,t,0.28,'sawtooth',0.1,A.sfx,110);tone(165,t+0.08,0.3,'square',0.06,A.sfx,80);},
+  mid:function(t){tone(440,t,0.12,'triangle',0.13,A.sfx);tone(392,t+0.1,0.16,'triangle',0.13,A.sfx);},
+  retry:function(t){tone(392,t,0.12,'triangle',0.12,A.sfx,330);tone(494,t+0.1,0.16,'triangle',0.13,A.sfx);},
+  lock:function(t){tone(300,t,0.08,'square',0.08,A.sfx,200);tone(900,t+0.07,0.1,'triangle',0.12,A.sfx);},
+  msg:function(t){tone(880,t,0.09,'sine',0.14,A.sfx);tone(1175,t+0.09,0.14,'sine',0.14,A.sfx);},
+  whoosh:function(t){noise(t,0.35,400,2400,0.12,A.sfx);},
+  start:function(t){[523,659,784,1047].forEach(function(f,i){tone(f,t+i*0.08,0.18,'triangle',0.15,A.sfx);});},
+  fanfare:function(t){[523,659,784,659,784,1047].forEach(function(f,i){tone(f,t+i*0.11,0.22,'square',0.08,A.sfx);});tone(1047,t+0.7,0.7,'triangle',0.14,A.sfx);tone(784,t+0.7,0.7,'triangle',0.1,A.sfx);}
+};
+function sfx(n){if(!A.sfxOn)return;if(!ac())return;if(SFX[n])SFX[n](A.ctx.currentTime+0.01);}
+/* Musik latar: C - G - Am - F, 112 bpm, nuansa lo-fi pop */
+var CH=[[60,64,67,72],[55,59,62,67],[57,60,64,69],[53,57,60,65]],PAT=[0,1,2,3,2,1,3,2];
+function bgmStep(step,t,e){
+  var bar=Math.floor(step/8)%4,i=step%8,ch=CH[bar];
+  tone(mf(ch[PAT[i]]),t,e*1.5,'triangle',0.09,A.mus);
+  if(i===0||i===3||i===4)tone(mf(ch[0]-24),t,e*2.4,'sine',0.17,A.mus);
+  if(i===0||i===4)tone(140,t,0.13,'sine',0.22,A.mus,45);
+  if(i===2||i===6)noise(t,0.07,2500,1500,0.06,A.mus);
+  if(i%2===1)noise(t,0.03,8000,9500,0.045,A.mus);
+  if(i===5&&(bar===1||bar===3))tone(mf(ch[3]+12),t,e*2,'sine',0.06,A.mus);
+}
+function bgmTick(){
+  var c=A.ctx;if(!c||!A.musicOn)return;
+  var e=60/112/2;
+  if(A.next<c.currentTime-0.5)A.next=c.currentTime+0.05;
+  while(A.next<c.currentTime+0.4){bgmStep(A.step,A.next,e);A.next+=e;A.step=(A.step+1)%32;}
+}
+function bgmStart(){if(A.timer||!A.musicOn||!ac())return;A.next=A.ctx.currentTime+0.1;A.step=0;A.timer=setInterval(bgmTick,120);}
+function bgmStop(){if(A.timer){clearInterval(A.timer);A.timer=null;}}
+function syncSnd(){
+  var m=$('#btn-mus'),s=$('#btn-sfx');
+  if(m){m.classList.toggle('off',!A.musicOn);m.setAttribute('aria-pressed',A.musicOn?'true':'false');}
+  if(s){s.classList.toggle('off',!A.sfxOn);s.setAttribute('aria-pressed',A.sfxOn?'true':'false');}
+}
+
+/* ---------- Efek visual: confetti & percikan ---------- */
+var FXS={ps:[],run:false,cv:null,cx:null};
+var COLS=['#3347FF','#FF6F5E','#FFC53D','#59C08A','#FFFFFF','#B35CFF'];
+function fxSize(){var c=FXS.cv;if(!c)return;c.width=window.innerWidth;c.height=window.innerHeight;}
+function burst(x,y,n,pow){
+  if(REDUCE||!FXS.cv||!FXS.cx)return;
+  for(var i=0;i<n;i++){
+    var a=Math.random()*Math.PI*2,sp=(Math.random()*0.6+0.4)*pow;
+    FXS.ps.push({x:x,y:y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-pow*0.5,s:Math.random()*5+4,c:COLS[(Math.random()*COLS.length)|0],r:Math.random()*6,vr:(Math.random()-0.5)*0.4,l:1,d:Math.random()*0.012+0.012,round:Math.random()<0.3});
+  }
+  if(!FXS.run){FXS.run=true;requestAnimationFrame(fxLoop);}
+}
+function fxLoop(){
+  var cx=FXS.cx,cv=FXS.cv,ps=FXS.ps;
+  cx.clearRect(0,0,cv.width,cv.height);
+  for(var i=ps.length-1;i>=0;i--){
+    var p=ps[i];p.vy+=0.22;p.vx*=0.99;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;p.l-=p.d;
+    if(p.l<=0||p.y>cv.height+20){ps.splice(i,1);continue;}
+    cx.save();cx.globalAlpha=Math.min(1,p.l*1.6);cx.translate(p.x,p.y);cx.rotate(p.r);
+    cx.fillStyle=p.c;cx.strokeStyle='#1B1F3B';cx.lineWidth=1.5;
+    if(p.round){cx.beginPath();cx.arc(0,0,p.s/2,0,6.283);cx.fill();cx.stroke();}
+    else{cx.fillRect(-p.s/2,-p.s/3,p.s,p.s*0.66);cx.strokeRect(-p.s/2,-p.s/3,p.s,p.s*0.66);}
+    cx.restore();
+  }
+  if(ps.length)requestAnimationFrame(fxLoop);else{FXS.run=false;cx.clearRect(0,0,cv.width,cv.height);}
+}
+function burstScreen(){var w=window.innerWidth;[0.15,0.5,0.85].forEach(function(f,i){setTimeout(function(){burst(w*f,window.innerHeight*0.35,46,13);},i*220);});}
+function shake(el){if(el&&!REDUCE){el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake');}}
+
+/* ---------- state ---------- */
+var S={phase:0,user:null,pick:'k1',sc:null,ind:{kel:null,sik:null,trust:50},b1:null,b2:null,b3:null,chal:[false,false,false]};
+var PHASES=['Mulai','Babak 1','Babak 2','Babak 3','Ringkasan'];
+function fin(att){return clamp(100-15*(att-1),40,100);}
+function newGame(id){
+  S.sc=SC[id];S.pick=id;S.ind={kel:null,sik:null,trust:50};S.chal=[false,false,false];
+  S.b1={fill:[null,null,null],locked:[false,false,false],tried:[[],[],[]],order:S.sc.b1.slots.map(function(s){return shuffle(range(s.chips.length));}),mode:'edit',att:0,res:null,dt:0};
+  S.b2={aOrder:shuffle(range(S.sc.b2.phrases.length)),
+    a:{flags:{},st:{},curFp:[],mode:'edit',att:0,tp:0,fp:0,miss:0,pct:0,dt:0},
+    b:{slots:[null,null,null,null],lock:[false,false,false,false],order:shuffleNot(4,[0,1,2,3]),mode:'edit',att:0,res:null,pct:0,dt:0}};
+  S.b3={choice:[null,null,null],lock:[false,false,false],mode:'edit',att:0,res:null,pct:0,dt:0};
+  setMascot('neutral');
+}
+
+/* ---------- top bar ---------- */
+var toastT=null;
+function toast(m){var t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('show');},2200);}
+function setMeter(id,val,color){
+  var el=$('#'+id),mv=$('.mv',el),bi=$('i',el);
+  var txt=val===null?'—':String(Math.round(val));
+  if(mv.textContent!==txt){mv.textContent=txt;if(!REDUCE){el.classList.remove('pulse');void el.offsetWidth;el.classList.add('pulse');}}
+  bi.style.width=(val===null?0:clamp(val,0,100))+'%';
+  if(color)bi.style.background=color;
+}
+function updateMeters(){
+  setMeter('m-kel',S.ind.kel);setMeter('m-sik',S.ind.sik);
+  var t=S.ind.trust;setMeter('m-trust',t,t<35?'#FF6F5E':(t<65?'#FFC53D':'#59C08A'));
+}
+function popDelta(d){
+  if(!d)return;var el=$('#m-trust'),s=document.createElement('span');
+  s.className='pd '+(d>0?'pos':'neg');s.textContent=(d>0?'+':'')+d;el.appendChild(s);
+  setTimeout(function(){if(s.parentNode)s.parentNode.removeChild(s);},1100);
+}
+function addTrust(d){S.ind.trust=clamp(S.ind.trust+d,0,100);popDelta(d);updateMeters();setMascot(moodOf(S.ind.trust));}
+function celebrate(){burstScreen();setMascot('cheer');setTimeout(function(){setMascot(moodOf(S.ind.trust));},2300);}
+function dtag(l,d){return '<span class="delta '+(d>=0?'pos':'neg')+'">'+l+' '+(d>=0?'+':'')+d+'</span>';}
+function syncTop(){
+  var chips=$('#chips'),meters=$('#meters');
+  if(S.user){chips.hidden=false;$('#c-user').textContent=S.user.nama+' · NIK '+S.user.nik;}else chips.hidden=true;
+  var cs=$('#c-sc');if(S.sc&&S.phase>=1){cs.hidden=false;cs.textContent=S.sc.short;}else cs.hidden=true;
+  meters.hidden=!(S.user&&S.sc&&S.phase>=1);
+  updateMeters();
+}
+function renderStepper(){
+  $('#stepper').innerHTML=PHASES.map(function(n,i){
+    var c=i===S.phase?'on':(i<S.phase?'done':'');
+    return '<div class="step '+c+'"'+(i===S.phase?' aria-current="step"':'')+'><i>'+(i<S.phase?'✓':i+1)+'</i>'+n+'</div>';
+  }).join('');
+}
+function go(n){
+  S.phase=n;
+  [renderHome,renderB1,renderB2,renderB3,renderSum][n]();
+  renderStepper();syncTop();
+  if(n===0)sfx('start');else sfx('whoosh');
+  stage.classList.remove('enter');void stage.offsetWidth;stage.classList.add('enter');
+  window.scrollTo(0,0);
+}
+function look(sel,pos){var el=$(sel);if(el)el.scrollIntoView({behavior:REDUCE?'auto':'smooth',block:pos||'center'});}
+function phaseHead(n,t,sub){return '<div class="phead"><div class="pnum">'+n+'</div><div><h2>'+t+'</h2><p class="muted">'+sub+'</p></div></div>';}
+function coach(text,mood){return '<div class="coach"><div class="cm">'+mascot(mood||moodOf(S.ind.trust),62)+'</div><div class="cb">'+text+'</div></div>';}
+function fbox(cls,mood,head,txt,extra){
+  return '<div class="fb '+cls+'"><div class="fm">'+mascot(mood,58)+'</div><div><b>'+head+'</b>'+txt+(extra?'<div style="margin-top:6px">'+extra+'</div>':'')+'</div></div>';
+}
+function scenarioPicker(sel){
+  return '<div class="seg" id="seg">'+Object.keys(SC).map(function(k){var c=SC[k];
+    return '<label class="'+(sel===k?'on':'')+'"><input type="radio" name="sc" value="'+k+'"'+(sel===k?' checked':'')+'><span><b>'+c.name+'</b><small>'+c.desc+'</small></span></label>';}).join('')+'</div>';
+}
+function bindPicker(){
+  $$('#seg input').forEach(function(inp){inp.addEventListener('change',function(){
+    S.pick=inp.value;sfx('pop');$$('#seg label').forEach(function(l){l.classList.toggle('on',$('input',l).checked);});});});
+}
+function attLine(n){return n<=1?'langsung pas':'berhasil di percobaan ke-'+n;}
+
+/* ---------- Halaman depan ---------- */
+function renderHome(){
+  var u=S.user||{nama:'',nik:''};
+  stage.innerHTML='<div class="bento">'+
+  '<section class="card c-grad hero s12"><i class="dc d1"></i><i class="dc d2"></i><i class="dc d3"></i><div><span class="tag">Materi 4.3 · Misi 4</span><h1>Persuasion <span class="hl" style="color:var(--ink)">Arena</span></h1><div class="sub">Mengajak Tanpa Menekan</div>'+
+    '<p class="hook">“Arahan sudah disampaikan, tapi tim terlihat tegang atau menarik ulur? Sering kali masalahnya bukan di niat kerja, melainkan cara menyampaikannya yang terasa kaku/menekan atau sikap yang kurang pas membaca situasi.”</p>'+
+    '<div class="stk"><span>#TanpaMenekan</span><span>#TheWhy</span><span>#JedaSTAR</span></div>'+
+    '<p class="muted" style="margin-top:14px">Peran Anda: Junior Manager di pabrik roti. Gabungan Materi 4.1 dan 4.2: menyusun ajakan yang luwes, membaca sikap, dan merespons keberatan.</p></div><div style="position:relative">'+heroSVG().replace('<svg ','<svg class="scene" ')+'<div class="hm">'+mascot('cheer',84)+'</div></div></section>'+
+  '<section class="card s12"><form id="lf" novalidate autocomplete="off"><div class="two"><div><span class="tag">Identitas peserta</span><h2>Masuk ke arena 🚀</h2>'+
+    '<div class="field"><label for="nm">Nama</label><input id="nm" type="text" maxlength="60" placeholder="Nama lengkap" value="'+esc(u.nama)+'" aria-describedby="e-nm"><span class="err" id="e-nm" role="alert"></span></div>'+
+    '<div class="field"><label for="nik">NIK</label><input id="nik" type="text" maxlength="30" placeholder="Nomor Induk Karyawan" value="'+esc(u.nik)+'" aria-describedby="e-nik"><span class="err" id="e-nik" role="alert"></span></div>'+
+    '<div class="disc"><b>Catatan:</b> situasi dan alur pabrik di game ini adalah ilustrasi pembelajaran. Pilih berdasarkan informasi yang tertampil di layar. Jawaban harus tepat dulu sebelum lanjut ke tahap berikutnya.</div></div>'+
+    '<div><span class="tag">Skenario</span><h2>Pilih kasus</h2>'+scenarioPicker(S.pick)+
+    '<div style="margin-top:18px"><button class="btn go" type="submit">Masuk Persuasion Arena →</button></div></div></div></form></section>'+
+  '<section class="card c-sky s4 mini-card"><span class="tag w">Babak 1</span><h3><span class="em">💬</span>Susun ajakan non-kaku</h3><p class="muted" style="font-size:14px;font-weight:700">Isi tiga slot kalimat dengan chip: empati, “the why”, dan ajakan kolaboratif.</p></section>'+
+  '<section class="card c-pink s4 mini-card"><span class="tag w">Babak 2</span><h3><span class="em">🚩</span>Saring &amp; urutkan STAR</h3><p class="muted" style="font-size:14px;font-weight:700">Tandai kalimat kaku atau menekan, lalu susun urutan Stop, Think, Assess, Respond.</p></section>'+
+  '<section class="card c-mint s4 mini-card"><span class="tag w">Babak 3</span><h3><span class="em">⚖️</span>Tegas atau persuasif?</h3><p class="muted" style="font-size:14px;font-weight:700">Pilih mode sikap yang tepat untuk tiap situasi agar standar tetap terjaga dan tim tidak tertekan.</p></section>'+
+  '</div>';
+  bindPicker();
+  [['#nm','#e-nm'],['#nik','#e-nik']].forEach(function(pr){
+    $(pr[0]).addEventListener('input',function(){$(pr[1]).textContent='';$(pr[0]).setAttribute('aria-invalid','false');});
+  });
+  $('#lf').addEventListener('submit',function(e){
+    e.preventDefault();
+    var nama=$('#nm').value.replace(/\s+/g,' ').trim(),nik=$('#nik').value.trim(),bad=null;
+    $('#e-nm').textContent='';$('#e-nik').textContent='';
+    $('#nm').setAttribute('aria-invalid','false');$('#nik').setAttribute('aria-invalid','false');
+    if(!nama){$('#e-nm').textContent='Nama wajib diisi.';$('#nm').setAttribute('aria-invalid','true');bad=bad||$('#nm');}
+    if(!nik){$('#e-nik').textContent='NIK wajib diisi.';$('#nik').setAttribute('aria-invalid','true');bad=bad||$('#nik');}
+    if(bad){bad.focus();shake($('#lf'));sfx('bad');return;}
+    S.user={nik:nik,nama:nama};newGame(S.pick);go(1);
+  });
+}
+
+/* ---------- Babak 1 ---------- */
+function renderB1(){
+  var sc=S.sc,b=S.b1,slots=sc.b1.slots;
+  var all=b.fill.every(function(v){return v!==null;});
+  var no=b.mode==='edit'?b.att+1:b.att;
+  var compose=slots.map(function(s,i){
+    var v=b.fill[i];
+    if(v===null)return '<span class="slot">['+s.label+']</span>';
+    var cls='slot';
+    if(b.mode!=='edit'&&b.res)cls+=' q'+s.chips[v].q;else if(b.locked[i])cls+=' q2';
+    var can=b.mode==='edit'&&!b.locked[i];
+    return '<button type="button" class="'+cls+'" data-clear="'+i+'" '+(can?'title="Ketuk untuk mengosongkan"':'disabled')+'>'+s.chips[v].t+'</button>';
+  }).join(' ');
+  var html='<div class="bento"><section class="card s12">'+phaseHead(1,'Susun Kalimat Ajakan','Materi 4.1 · Non-kaku + “The Why”')+
+    '<div class="sit"><b>Situasi</b>'+sc.b1.situasi+'</div>'+
+    coach('Formula ajakan luwes: <b>Empati</b> → <b>The Why</b> → <b>Ajak bareng</b>. Ketiganya harus pas dulu sebelum bisa lanjut.')+
+    '<div class="compose"><div class="lb">💬 Draft pesan ke tim'+(no>1?' · percobaan ke-'+no:'')+'</div><div class="draft">'+compose+'</div></div>';
+  if(b.mode==='edit'){
+    var groups=slots.map(function(s,si){
+      var head='<div class="gh"><span class="gn">'+(si+1)+'</span><div><b>'+s.label+'</b><small>'+s.hint+'</small></div></div>';
+      if(b.locked[si])return '<div class="grp">'+head+'<div class="glock">✔ Slot ini sudah tepat dan terkunci</div></div>';
+      return '<div class="grp">'+head+'<div class="chipwrap">'+b.order[si].map(function(ci){
+        var c=s.chips[ci],on=b.fill[si]===ci,tr=b.tried[si].indexOf(ci)>=0;
+        return '<button type="button" class="cp'+(on?' on':'')+(tr?' tried':'')+'" data-s="'+si+'" data-c="'+ci+'" aria-pressed="'+on+'" '+(tr?'disabled':'')+'>'+c.t+(tr?'<span class="tt">sudah dicoba · belum pas</span>':'')+'</button>';}).join('')+'</div></div>';
+    }).join('');
+    html+='<p style="font-weight:700">Ketuk chip untuk mengisi slot. Ketuk slot yang terisi untuk mengosongkannya.</p>'+groups+
+      '<div class="row"><button class="btn" id="send" '+(all?'':'disabled')+'>Kirim Arahan ke Tim 🚀</button>'+(all?'':'<span class="hint">Lengkapi slot yang kosong dulu.</span>')+'</div>';
+  }else html+=resultB1();
+  html+='</section></div>';
+  stage.innerHTML=html;
+  $$('.cp').forEach(function(el){el.addEventListener('click',function(){
+    if(b.mode!=='edit')return;var si=+el.getAttribute('data-s'),ci=+el.getAttribute('data-c');
+    b.fill[si]=(b.fill[si]===ci)?null:ci;sfx('pop');renderB1();});});
+  $$('[data-clear]').forEach(function(el){el.addEventListener('click',function(){
+    if(b.mode!=='edit')return;b.fill[+el.getAttribute('data-clear')]=null;renderB1();});});
+  var sd=$('#send');if(sd)sd.addEventListener('click',sendB1);
+  var rt=$('#retry1');if(rt)rt.addEventListener('click',function(){
+    sc.b1.slots.forEach(function(s,i){if(b.res.q[i]===2)b.locked[i]=true;else{b.tried[i].push(b.fill[i]);b.fill[i]=null;}});
+    b.res=null;b.mode='edit';sfx('retry');renderB1();look('.compose','start');});
+  var nx=$('#nx1');if(nx)nx.addEventListener('click',function(){go(2);});
+}
+function sendB1(){
+  var sc=S.sc,b=S.b1,q=[],total=0;
+  sc.b1.slots.forEach(function(s,i){var v=s.chips[b.fill[i]].q;q.push(v);total+=v;});
+  b.att++;
+  var tier=total===6?'hi':(total>=4?'mid':(total>=2?'low':'bad'));
+  b.res={q:q,total:total,tier:tier};
+  if(total===6){
+    b.mode='done';b.dt=14;S.ind.kel=fin(b.att);addTrust(14);celebrate();sfx('good');toast(TIER.hi.head);
+  }else{
+    b.mode='review';b.dt=TIER[tier].dt;addTrust(b.dt);sfx(tier==='mid'?'mid':'bad');toast(TIER[tier].head);
+  }
+  renderB1();look('.react');
+}
+function resultB1(){
+  var sc=S.sc,b=S.b1,r=b.res,t=TIER[r.tier],rx=sc.b1.reactions[r.tier],done=b.mode==='done';
+  var rows=sc.b1.slots.map(function(s,i){var c=s.chips[b.fill[i]];
+    return '<div class="fbrow q'+c.q+'"><span class="qt">'+QL[c.q]+'</span><div><b>'+s.label+'</b><br>'+c.why+'</div></div>';}).join('');
+  var team=rx.map(function(m,i){
+    return '<div class="mem t-'+r.tier+'"><div class="f">'+faceSVG(t.mood[i],LOOKS[i])+'</div><div class="bb"><small>'+m.n+'</small>'+m.line+'<span class="em">'+t.emo[i]+'</span></div></div>';}).join('');
+  var h='<div class="react"><div class="rhead">'+signalSVG(t.bars,t.color)+'<div><b>Sinyal respons tim: '+t.lbl+'</b><span>Skor luwes '+r.total+'/6</span></div></div><div class="team">'+team+'</div></div>';
+  h+=fbox(done?'hi':(r.tier==='mid'?'mid':'low'),done?'cheer':(r.tier==='mid'?'neutral':'worried'),t.head,
+    done?'Pesan Anda '+attLine(b.att)+'. Tim paham alasannya dan merasa diajak, bukan disuruh.':t.txt+' Slot yang sudah luwes akan terkunci, ganti yang masih kurang.',
+    dtag('Trust',b.dt)+(done?'<span class="delta">Keluwesan &amp; “The Why” '+S.ind.kel+'</span>':''));
+  h+='<h3>Kenapa begini?</h3>'+rows;
+  h+='<div class="row" style="margin-top:12px">'+(done?'<button class="btn go" id="nx1">Lanjut ke Babak 2 →</button>':'<button class="btn coral" id="retry1">Coba Lagi 🔁</button><span class="hint">Belum tepat, jadi belum bisa lanjut.</span>')+'</div>';
+  return h;
+}
+
+/* ---------- Babak 2 ---------- */
+function renderB2(){
+  var b2=S.b2,html='<div class="bento"><section class="card s12">'+phaseHead(2,'Saring Kaku &amp; Urutkan STAR','Materi 4.2 · Tap-to-Flag dan Tap-to-Sequence')+
+    coach('<b>Tegas ≠ kaku.</b> Tegas = jelas + sopan + ada alasan. Yang perlu ditandai: nyuruh mentah, mengancam, atau membalas dengan emosi.')+partA()+'</section>';
+  if(b2.a.mode==='done')html+='<section class="card s12" id="partB">'+partB()+'</section>';
+  html+='</div>';
+  stage.innerHTML=html;
+  var a=b2.a;
+  $$('.phr').forEach(function(el){el.addEventListener('click',function(){
+    if(a.mode!=='edit')return;var i=el.getAttribute('data-i');if(a.st[i])return;
+    a.flags[i]=!a.flags[i];sfx('flag');renderB2();});});
+  var lk=$('#lockA');if(lk)lk.addEventListener('click',lockA);
+  var rt=$('#retryA');if(rt)rt.addEventListener('click',function(){
+    a.curFp=[];S.sc.b2.phrases.forEach(function(p,i){a.flags[i]=(a.st[i]==='ok');});
+    a.mode='edit';sfx('retry');renderB2();});
+  var b=b2.b;
+  $$('[data-add]').forEach(function(el){el.addEventListener('click',function(){
+    if(b.mode!=='edit')return;var k=b.slots.indexOf(null);if(k<0)return;b.slots[k]=+el.getAttribute('data-add');sfx('pop');renderB2();});});
+  function swap(p,q){if(q<0||q>3||b.lock[p]||b.lock[q])return;var t=b.slots[p];b.slots[p]=b.slots[q];b.slots[q]=t;sfx('tap');renderB2();}
+  $$('[data-up]').forEach(function(el){el.addEventListener('click',function(){var p=+el.getAttribute('data-up');swap(p,p-1);});});
+  $$('[data-dn]').forEach(function(el){el.addEventListener('click',function(){var p=+el.getAttribute('data-dn');swap(p,p+1);});});
+  $$('[data-rm]').forEach(function(el){el.addEventListener('click',function(){var p=+el.getAttribute('data-rm');if(!b.lock[p]){b.slots[p]=null;renderB2();}});});
+  var rs=$('#resetB');if(rs)rs.addEventListener('click',function(){b.slots=b.slots.map(function(v,i){return b.lock[i]?v:null;});renderB2();});
+  var ap=$('#applyB');if(ap)ap.addEventListener('click',applyB);
+  var rb=$('#retryB');if(rb)rb.addEventListener('click',function(){
+    b.slots=b.slots.map(function(v,i){if(b.res[i]){b.lock[i]=true;return v;}return null;});
+    b.res=null;b.mode='edit';sfx('retry');renderB2();look('#partB','start');});
+  var nx=$('#nx2');if(nx)nx.addEventListener('click',function(){go(3);});
+}
+function partA(){
+  var sc=S.sc,a=S.b2.a,ob=sc.b2.objector,ph=sc.b2.phrases,pending=0,remaining=0,need=0;
+  ph.forEach(function(p,i){if(!a.st[i]&&a.flags[i])pending++;if(p.flag){need++;if(a.st[i]!=='ok')remaining++;}});
+  var items=S.b2.aOrder.map(function(i){
+    var p=ph[i],cls='phr',tail='',dis=true,on=!!a.flags[i];
+    if(a.st[i]==='ok'){cls+=' ok';tail='<span class="vd">✔ Tepat ditandai · '+p.type+'</span><span class="why">'+p.why+'</span>';}
+    else if(a.st[i]==='no'){
+      if(a.mode==='review'&&a.curFp.indexOf(i)>=0){cls+=' bad';tail='<span class="vd">✘ Salah tandai · kalimat ini tidak kaku/menekan</span><span class="why">'+p.why+'</span>';}
+      else{cls+=' fine';tail='<span class="vd">✓ Bukan kaku/menekan</span><span class="why">'+p.why+'</span>';}
+    }else if(a.mode==='done'){cls+=' fine';tail='<span class="vd">✓ Tepat dibiarkan</span><span class="why">'+p.why+'</span>';}
+    else if(a.mode==='edit'){dis=false;if(on)cls+=' flag';}
+    return '<button type="button" class="'+cls+'" data-i="'+i+'" aria-pressed="'+(on&&!a.st[i])+'" '+(dis?'disabled':'')+'>'+(on&&!a.st[i]&&a.mode==='edit'?'<span class="ftag">🚩 Ditandai</span>':'')+p.t+tail+'</button>';
+  }).join('');
+  var no=a.mode==='edit'?a.att+1:a.att;
+  var h='<h3>Bagian A · Tap-to-Flag'+(no>1?' · percobaan ke-'+no:'')+'</h3><div class="ob"><div class="f">'+faceSVG('tense',LOOKS[1])+'</div><div class="bb"><small>'+ob.n+'</small>'+ob.line+'</div></div>'+
+    '<p style="font-weight:700">Ini potongan kalimat yang bisa muncul dari Anda atau rekan manajer. Ketuk yang tergolong <b>Kaku / Menekan / Reaktif</b> untuk menandainya. Tegas yang sopan dan beralasan bukan termasuk kaku.</p>'+
+    '<div class="phs">'+items+'</div>';
+  if(a.mode==='edit'){
+    h+='<div class="row"><button class="btn coral" id="lockA" '+((pending>0||remaining===0)?'':'disabled')+'>Kunci Flag 🚩</button><span class="hint">'+(remaining===0&&pending===0?'Semua kalimat bermasalah sudah ditemukan. Tekan Kunci Flag untuk melanjutkan.':'Ditandai baru: '+pending+' kalimat')+'</span></div>';
+  }else if(a.mode==='review'){
+    h+=fbox(a.fp?'low':'mid','worried','Belum tepat: '+a.tp+' dari '+need+' kalimat bermasalah ditemukan',
+      (a.fp?'Salah tandai: '+a.fp+'. ':'')+(a.miss?'Masih ada '+a.miss+' kalimat bermasalah yang belum ditandai. ':'')+
+      'Ingat: sikap <b>tegas (assertive)</b> menyampaikan batas dengan jelas dan hormat, sedangkan kalimat kaku, menekan, atau reaktif menyerang orang atau menutup dialog. Yang sudah tepat akan terkunci.',dtag('Trust',a.dt))+
+      '<div class="row"><button class="btn coral" id="retryA">Coba Lagi 🔁</button><span class="hint">Belum tepat, jadi belum bisa lanjut ke bagian B.</span></div>';
+  }else{
+    h+=fbox('hi','cheer','Mantap! Semua kalimat bermasalah ketemu ✔','Penyaringan Anda '+attLine(a.att)+'. Anda bisa membedakan tegas yang sehat dari kalimat yang kaku, menekan, atau reaktif.',dtag('Trust',a.dt)+'<span class="delta">Skor penyaringan '+a.pct+'</span>');
+  }
+  return h;
+}
+function lockA(){
+  var sc=S.sc,a=S.b2.a,ph=sc.b2.phrases,fp=[];
+  ph.forEach(function(p,i){if(a.st[i]||!a.flags[i])return;if(p.flag)a.st[i]='ok';else{a.st[i]='no';fp.push(i);}});
+  var need=0,ok=0;ph.forEach(function(p,i){if(p.flag){need++;if(a.st[i]==='ok')ok++;}});
+  var miss=need-ok;a.att++;a.curFp=fp;a.tp=ok;a.fp=fp.length;a.miss=miss;
+  if(fp.length===0&&miss===0){
+    a.mode='done';a.pct=fin(a.att);a.dt=10;S.ind.sik=a.pct;addTrust(10);celebrate();sfx('good');toast('Flag tepat semua ✔');
+  }else{
+    a.mode='review';a.dt=-(fp.length*3+miss*2);addTrust(a.dt);sfx(fp.length?'bad':'mid');toast('Belum tepat, coba lagi');
+  }
+  renderB2();look(a.mode==='done'?'#partB':'.fb','center');
+}
+function partB(){
+  var sc=S.sc,b=S.b2.b,star=sc.b2.star,rows='';
+  for(var pos=0;pos<4;pos++){
+    var ci=b.slots[pos];
+    if(ci===null){rows+='<div class="slotrow"><span class="no">'+(pos+1)+'</span><span class="hint">Ketuk kartu langkah di bawah untuk mengisi urutan ke-'+(pos+1)+'</span></div>';continue;}
+    var c=star[ci];
+    if(b.mode==='done'||b.lock[pos]||(b.mode==='review'&&b.res[pos])){
+      rows+='<div class="slotrow filled ok"><span class="no">'+(pos+1)+'</span><div><b>✔ '+c.lbl+'</b> · '+c.t+'<small>'+c.why+'</small></div></div>';
+    }else if(b.mode==='review'){
+      rows+='<div class="slotrow filled bad"><span class="no">'+(pos+1)+'</span><div><b>✘ Belum tepat di urutan ke-'+(pos+1)+'</b> · '+c.t+'<small>Coba tukar. Ingat: tahan reaksi dulu, pahami, nilai, baru merespons.</small></div></div>';
+    }else{
+      rows+='<div class="slotrow filled"><span class="no">'+(pos+1)+'</span><span>'+c.t+'</span><span class="ctl"><button type="button" class="mini" data-up="'+pos+'" aria-label="Naikkan" '+((pos===0||b.lock[pos-1])?'disabled':'')+'>▲</button><button type="button" class="mini" data-dn="'+pos+'" aria-label="Turunkan" '+((pos===3||b.lock[pos+1])?'disabled':'')+'>▼</button><button type="button" class="mini" data-rm="'+pos+'" aria-label="Lepas kartu">✕</button></span></div>';
+    }
+  }
+  var no=b.mode==='edit'?b.att+1:b.att;
+  var h='<h3>Bagian B · Tap-to-Sequence'+(no>1?' · percobaan ke-'+no:'')+'</h3>'+
+    coach('Jeda dulu sebelum bales. Urutan <b>STAR</b> itu rem tangan kamu saat ada keberatan.','neutral')+
+    '<p style="font-weight:700">Susun <b>urutan respons STAR</b> saat tim menyampaikan keberatan: ketuk kartu sesuai urutan, lalu gunakan ▲ ▼ untuk menukar posisi.</p>'+
+    '<div class="starleg"><span>S · Stop</span><span>T · Think</span><span>A · Assess</span><span>R · Respond</span></div>'+rows;
+  if(b.mode==='edit'){
+    var pool=b.order.filter(function(i){return b.slots.indexOf(i)<0;}).map(function(i){return '<button type="button" class="stepcard" data-add="'+i+'">'+star[i].t+'</button>';}).join('');
+    var full=b.slots.indexOf(null)<0;
+    h+=(pool?'<div class="pool">'+pool+'</div>':'')+
+      '<div class="row"><button class="btn" id="applyB" '+(full?'':'disabled')+'>Terapkan Respons STAR ⚡</button><button class="btn ghost" id="resetB">Reset urutan</button></div>';
+  }else if(b.mode==='review'){
+    var c2=b.res.filter(Boolean).length;
+    h+=fbox('low','worried','Belum tepat: '+c2+' dari 4 langkah sudah pada tempatnya','Langkah yang sudah tepat akan terkunci. Susun ulang sisanya.',dtag('Trust',b.dt))+
+      '<div class="row"><button class="btn coral" id="retryB">Coba Lagi 🔁</button><span class="hint">Belum tepat, jadi belum bisa lanjut ke Babak 3.</span></div>';
+  }else{
+    h+=fbox('hi','cheer','Urutan STAR sempurna ⚡','Respons Anda '+attLine(b.att)+'. Jeda STAR menjaga trust: Anda menahan reaksi, memahami kekhawatiran, menilai apakah ini batas wajib atau bisa dirundingkan, baru merespons.',
+      dtag('Trust',b.dt)+'<span class="delta">Skor STAR '+b.pct+'</span><span class="delta">Ketepatan Sikap &amp; STAR '+S.ind.sik+'</span>')+
+      '<div class="row"><button class="btn go" id="nx2">Lanjut ke Babak 3 →</button></div>';
+  }
+  return h;
+}
+function applyB(){
+  var b=S.b2.b,res=[],c=0;
+  b.slots.forEach(function(v,i){var ok=(v===i);res.push(ok);if(ok)c++;});
+  b.att++;b.res=res;
+  if(c===4){
+    b.mode='done';b.pct=fin(b.att);b.dt=10;S.ind.sik=Math.round((S.b2.a.pct+b.pct)/2);addTrust(10);celebrate();sfx('good');toast('Urutan STAR tepat ⚡');
+  }else{
+    b.mode='review';b.dt=-(4-c)*2;addTrust(b.dt);sfx(c>=2?'mid':'bad');toast('Belum tepat, coba lagi');
+  }
+  renderB2();look('#partB .fb','center');
+}
+
+/* ---------- Babak 3 ---------- */
+function renderB3(){
+  var sc=S.sc,b=S.b3,all=b.choice.every(function(v){return v!==null;});
+  var no=b.mode==='edit'?b.att+1:b.att;
+  var cards=sc.b3.map(function(s,i){
+    var ch=b.choice[i],cls='sitcard',res='',dis=b.mode!=='edit'||b.lock[i];
+    if(b.mode==='edit'&&b.lock[i]){cls+=' ok';res='<div class="sres"><b>✔ Tepat dan terkunci</b></div>';}
+    else if(b.mode!=='edit'){
+      var ok=b.res[i];cls+=ok?' ok':' bad';
+      var need=s.mode==='T'?'Tegas (Assertive)':'Persuasif';
+      var cons=s.mode==='T'?'Terlalu lunak: batas wajib terasa bisa ditawar dan standar bisa bocor.':'Terlalu keras: tim merasa ditekan dan mulai menarik ulur.';
+      res=ok?'<div class="sres"><b>✔ Mode tepat: '+need+'</b><br>'+s.why+'</div>':'<div class="sres"><b>✘ Belum tepat.</b> '+s.why+'<br><span class="hint" style="color:#3a4062">Dampak pilihan Anda: '+(ch==='P'?cons:'Terlalu keras: tim merasa ditekan dan mulai menarik ulur.')+'</span></div>';
+    }
+    return '<div class="'+cls+'"><span class="n">Situasi '+(i+1)+'</span><p>'+s.t+'</p><div class="tog" role="group" aria-label="Pilih mode sikap situasi '+(i+1)+'">'+
+      '<button type="button" class="t'+(ch==='T'?' on':'')+'" data-i="'+i+'" data-m="T" aria-pressed="'+(ch==='T')+'" '+(dis?'disabled':'')+'>Tegas<br><small>Assertive · Batas Wajib</small></button>'+
+      '<button type="button" class="p'+(ch==='P'?' on':'')+'" data-i="'+i+'" data-m="P" aria-pressed="'+(ch==='P')+'" '+(dis?'disabled':'')+'>Persuasif<br><small>Ajakan &amp; Keselarasan</small></button></div>'+res+'</div>';
+  }).join('');
+  var html='<div class="bento"><section class="card s12">'+phaseHead(3,'Penyelarasan Sikap &amp; Komitmen Aksi','Pilih mode sikap yang tepat untuk tiap situasi'+(no>1?' · percobaan ke-'+no:''))+
+    coach('Pertanyaan kunci: ini <b>batas wajib</b>, atau masih <b>bisa dirembukkan</b>? Jawabannya menentukan mode sikap.')+
+    '<p style="font-weight:700">Tiga situasi singkat muncul di lantai produksi. Pilih <b>Tegas (Assertive — Batas Wajib)</b> atau <b>Persuasif (Ajakan &amp; Keselarasan)</b> untuk masing-masing, lalu simpan keputusan Anda.</p>'+cards;
+  if(b.mode==='edit')html+='<div class="row"><button class="btn" id="save" '+(all?'':'disabled')+'>Simpan Keputusan ✅</button>'+(all?'':'<span class="hint">Pilih mode untuk semua situasi yang belum terkunci.</span>')+'</div>';
+  else if(b.mode==='review'){
+    var okc=b.res.filter(Boolean).length;
+    html+=fbox('low','worried','Belum tepat: '+okc+' dari 3 situasi sudah pas','Situasi yang sudah tepat akan terkunci. Baca alasan di tiap kartu lalu pilih ulang sisanya.',dtag('Trust',b.dt))+
+      '<div class="row"><button class="btn coral" id="retry3">Coba Lagi 🔁</button><span class="hint">Belum tepat, jadi belum bisa lanjut ke ringkasan.</span></div>';
+  }else{
+    html+=fbox('hi','cheer','Semua mode tepat 🎉','Keputusan Anda '+attLine(b.att)+'. Tegas dipakai untuk batas wajib yang menyangkut mutu dan keselamatan pangan. Persuasif dipakai saat cara, waktu, atau beban kerja masih bisa dirundingkan. Keduanya tetap hormat.',dtag('Trust',b.dt))+
+      '<div class="row"><button class="btn go" id="nx3">Lihat Ringkasan →</button></div>';
+  }
+  html+='</section></div>';
+  stage.innerHTML=html;
+  $$('.tog button').forEach(function(el){el.addEventListener('click',function(){
+    if(b.mode!=='edit')return;var i=+el.getAttribute('data-i');if(b.lock[i])return;
+    b.choice[i]=el.getAttribute('data-m');sfx('flag');renderB3();});});
+  var sv=$('#save');if(sv)sv.addEventListener('click',function(){
+    var res=[],r=0;sc.b3.forEach(function(s,i){var ok=b.choice[i]===s.mode;res.push(ok);if(ok)r++;});
+    b.att++;b.res=res;
+    if(r===3){b.mode='done';b.pct=fin(b.att);b.dt=12;addTrust(12);celebrate();sfx('good');toast('3 dari 3 tepat 🎉');}
+    else{b.mode='review';b.dt=-(3-r)*5;addTrust(b.dt);sfx(r>=2?'mid':'bad');toast(r+' dari 3 tepat, coba lagi');}
+    renderB3();look('.fb','center');});
+  var rt=$('#retry3');if(rt)rt.addEventListener('click',function(){
+    b.res.forEach(function(ok,i){if(ok)b.lock[i]=true;else b.choice[i]=null;});
+    b.res=null;b.mode='edit';sfx('retry');renderB3();});
+  var nx=$('#nx3');if(nx)nx.addEventListener('click',function(){go(4);});
+}
+
+/* ---------- Ringkasan ---------- */
+function renderSum(){
+  var kel=S.ind.kel===null?0:S.ind.kel,sik=S.ind.sik===null?0:S.ind.sik,tr=Math.round(S.ind.trust);
+  var avg=(kel+sik+tr)/3;
+  var rank=avg>=85?'Komunikator Persuasif Andal 🏆':(avg>=70?'Persuader Luwes ✨':(avg>=50?'Persuader Berkembang 🌱':'Terus Berlatih, Pasti Bisa 💪'));
+  var sk=[{k:'ajakan',p:kel},{k:'filter',p:S.b2.a.pct},{k:'star',p:S.b2.b.pct},{k:'mode',p:S.b3.pct}];
+  var best=sk.reduce(function(a,c){return c.p>a.p?c:a;},sk[0]);
+  var worst=sk.reduce(function(a,c){return c.p<a.p?c:a;},sk[0]);
+  var strength='<p><b>'+SKILL[best.k].n+' ('+best.p+'%)</b></p><p>'+SKILL[best.k].s+'</p>';
+  var area=worst.p>=100?'<p><b>Semua area kuat.</b></p><p>Pertahankan kebiasaan ini saat situasi lantai produksi lebih padat.</p>':'<p><b>'+SKILL[worst.k].n+' ('+worst.p+'%)</b></p><p>'+SKILL[worst.k].i+'</p>';
+  if(best.p===worst.p){
+    strength='<p><b>Konsisten di keempat latihan ('+best.p+'%)</b></p><p>Kemampuan Anda merata: menyusun ajakan, menyaring kalimat, menjaga jeda STAR, dan memilih sikap.</p>';
+    area=best.p>=100?'<p><b>Semua area kuat.</b></p><p>Pertahankan kebiasaan ini saat situasi lantai produksi lebih padat.</p>':'<p><b>Ketelitian di percobaan pertama</b></p><p>Biasakan membaca situasi dan alasannya dulu sebelum memilih, supaya jawaban sudah tepat sejak percobaan pertama.</p>';
+  }
+  var other=S.pick==='k1'?'k2':'k1';
+  var chal=['Ganti satu kalimat kaku atau menekan hari ini dengan ajakan plus “the why”.','Sebelum merespons, bedakan dulu: tegas (batas wajib) atau persuasif (bisa dirundingkan)?','Saat ada keberatan, lakukan jeda STAR: Stop, Think, Assess, baru Respond.'];
+  var att='<div class="att"><span>Babak 1: '+S.b1.att+'×</span><span>2A: '+S.b2.a.att+'×</span><span>2B: '+S.b2.b.att+'×</span><span>Babak 3: '+S.b3.att+'×</span></div>';
+  stage.innerHTML='<div class="bento">'+
+  '<section class="card c-grad s12"><div class="sumhero"><div><span class="tag">Misi 4 selesai</span><div class="rank">'+rank+'</div>'+
+    '<p class="muted" style="margin-top:6px;font-weight:800">'+esc(S.user.nama)+' · NIK '+esc(S.user.nik)+'</p><p class="muted">'+S.sc.name+'</p></div><div class="cm">'+mascot(avg>=70?'cheer':(avg>=50?'happy':'neutral'),110)+'</div></div>'+
+    '<div class="big" style="margin-top:14px"><div><strong>'+kel+'</strong><span>Keluwesan &amp; “The Why”</span></div><div><strong>'+sik+'</strong><span>Ketepatan Sikap &amp; STAR</span></div><div><strong>'+tr+'</strong><span>Trust &amp; Kesiapan Tim</span></div></div>'+att+'</section>'+
+  '<section class="card c-mint s6"><span class="tag w">Kekuatan utama</span><h2>Yang sudah kuat 💪</h2>'+strength+'</section>'+
+  '<section class="card c-sun s6"><span class="tag w">Perlu dibiasakan</span><h2>Area yang diasah 🌱</h2>'+area+'</section>'+
+  '<section class="card s7"><span class="tag">Challenge harian</span><h2>3 kebiasaan untuk dicoba 🎯</h2><ul class="lst chal">'+
+    chal.map(function(c,i){return '<li class="'+(S.chal[i]?'done':'')+'"><label><input type="checkbox" data-c="'+i+'"'+(S.chal[i]?' checked':'')+'><span>'+c+'</span></label></li>';}).join('')+'</ul>'+
+    '<p class="hint" style="margin-top:10px">Centang saat Anda sudah mencobanya.</p></section>'+
+  '<section class="card c-lilac s5"><span class="tag w">Main lagi</span><h2>Coba kasus lain 🔁</h2>'+scenarioPicker(other)+
+    '<div class="row" style="margin-top:16px"><button class="btn go" id="again">Main Lagi / Ganti Skenario</button><button class="btn ghost" id="who">Ganti Peserta</button></div></section>'+
+  '</div>';
+  S.pick=other;bindPicker();
+  setMascot(avg>=70?'cheer':moodOf(S.ind.trust));
+  setTimeout(function(){sfx(avg>=70?'fanfare':'good');if(avg>=70)burstScreen();},350);
+  $$('.chal input').forEach(function(inp){inp.addEventListener('change',function(){
+    var i=+inp.getAttribute('data-c');S.chal[i]=inp.checked;sfx(inp.checked?'good':'tap');if(inp.checked)burst(inp.getBoundingClientRect().left,inp.getBoundingClientRect().top,18,7);inp.closest('li').classList.toggle('done',inp.checked);});});
+  $('#again').addEventListener('click',function(){newGame(S.pick);go(1);});
+  $('#who').addEventListener('click',function(){S.user=null;S.sc=null;S.ind={kel:null,sik:null,trust:50};setMascot('happy');go(0);});
+}
+
+/* ---------- init ---------- */
+setMascot('happy');
+FXS.cv=document.getElementById('fx');
+if(FXS.cv&&FXS.cv.getContext){FXS.cx=FXS.cv.getContext('2d');fxSize();window.addEventListener('resize',fxSize);}
+syncSnd();
+function unlock(){ac();if(A.musicOn)bgmStart();}
+document.addEventListener('pointerdown',unlock,true);
+document.addEventListener('keydown',unlock,true);
+document.addEventListener('click',function(e){
+  var t=e.target;if(!t||!t.closest)return;
+  var b=t.closest('button, .seg label');
+  if(!b||b.disabled||b.id==='btn-mus'||b.id==='btn-sfx')return;
+  if(b.matches('.cp,.phr,.stepcard,.tog button,.slot,.seg label,.mini'))return;
+  sfx('tap');if(e.detail)burst(e.clientX,e.clientY,6,4);
+});
+$('#btn-mus').addEventListener('click',function(){
+  A.musicOn=!A.musicOn;try{localStorage.setItem('pa_music',A.musicOn?'1':'0');}catch(e){}
+  if(A.musicOn){if(ac())bgmStart();}else bgmStop();
+  syncSnd();toast(A.musicOn?'Musik latar menyala 🎵':'Musik latar dimatikan');
+});
+$('#btn-sfx').addEventListener('click',function(){
+  A.sfxOn=!A.sfxOn;try{localStorage.setItem('pa_sfx',A.sfxOn?'1':'0');}catch(e){}
+  syncSnd();toast(A.sfxOn?'Efek suara menyala 🔊':'Efek suara dimatikan');if(A.sfxOn)sfx('good');
+});
+document.addEventListener('visibilitychange',function(){
+  if(!A.ctx)return;
+  if(document.hidden){try{A.ctx.suspend();}catch(e){}}else{try{A.ctx.resume();}catch(e){}}
+});
+go(0);
+
+})();
+</script>
+</body>
+</html>
